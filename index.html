@@ -192,22 +192,12 @@
   .pv-tools{display:flex;gap:5px}
   .pv-body{padding:14px;background:repeating-linear-gradient(45deg,#1a1c21 0 12px,#1b1d22 12px 24px);max-height:480px;overflow-y:auto}
   .pv-page{
-    background:#fff;border:1.5px solid #1a1a1a;border-radius:4px;margin:0 auto;
+    border-radius:4px;margin:0 auto;
     transition:width .25s; box-shadow:0 14px 40px rgba(0,0,0,.5);
   }
+  .pv-page > svg{width:100%;height:auto;display:block;border-radius:4px}
   .pv-empty{color:#9aa;text-align:center;padding:46px 14px;font-size:.78rem;background:#fff;border-radius:4px}
-  /* página wireframe: faixa lateral + conteúdo */
-  .wf-sec{display:grid;grid-template-columns:54px 1fr;border-bottom:1.5px solid #1a1a1a;position:relative;transition:background .15s}
-  .wf-sec:last-child{border-bottom:none}
-  .wf-sec:hover{background:#fafaff}
-  .wf-gutter{border-right:1.5px solid #1a1a1a;padding:8px 5px;display:flex;flex-direction:column;gap:2px}
-  .wf-gutter .n{font-size:10px;font-weight:800;color:#1a1a1a;font-family:Arial}
-  .wf-gutter .t{font-size:6.5px;font-weight:700;color:#333;text-transform:uppercase;line-height:1.3;word-break:break-word;font-family:Arial}
-  .wf-content{padding:9px 10px;display:flex;flex-direction:column;gap:6px;min-height:46px}
-  .wf-el{aspect-ratio:3.4/1;height:auto;flex-shrink:0}
-  .wf-el svg{width:100%;height:100%;display:block}
-  .wf-el.tall{aspect-ratio:2.6/1}
-  .wf-empty{color:#c2c2c2;font-size:8.5px;font-style:italic;text-align:center;padding:10px;border:1px dashed #ddd;border-radius:3px;font-family:Arial}
+  .gen-hint{color:var(--texto-dim);font-size:.72rem;margin-bottom:10px;line-height:1.45}
 
   /* ============ PROMPT ============ */
   .gen-panel{background:var(--bg2);border:1px solid var(--linha);border-radius:var(--radius);padding:14px}
@@ -245,7 +235,7 @@
     <span class="logo">WF</span>
     <div>
       <h1>Construtor de Escopo · Wireframe Pro</h1>
-      <p>Categorias semânticas HTML · até 10 seções · alinhamento por elemento · prompt para o GPT</p>
+      <p>Categorias semânticas HTML · até 10 seções · preview em tempo real · export PNG / SVG / base64 · prompt para o GPT</p>
     </div>
   </div>
   <div class="head-actions">
@@ -287,6 +277,19 @@
         <div class="pv-page" id="preview" style="width:340px">
           <div class="pv-empty">O preview aparece aqui conforme você adiciona seções e elementos.</div>
         </div>
+      </div>
+    </div>
+
+    <div class="gen-panel">
+      <h3>🖼 Exportar imagem</h3>
+      <p class="gen-hint">O preview acima é exatamente a imagem exportada — gerada no seu navegador, sem internet e sem IA.</p>
+      <div class="side-actions">
+        <button class="btn btn-primary btn-sm" onclick="downloadPNG()">⬇ Baixar PNG</button>
+        <button class="btn btn-ghost btn-sm" onclick="downloadSVG()">⬇ Baixar SVG</button>
+      </div>
+      <div class="side-actions">
+        <button class="btn btn-ghost btn-sm" onclick="copyImage()">📋 Copiar imagem</button>
+        <button class="btn btn-ghost btn-sm" onclick="copyBase64()">⧉ Copiar base64</button>
       </div>
     </div>
 
@@ -650,40 +653,139 @@ function render(){
 }
 
 /* ================================================================
-   PREVIEW (página wireframe com faixa lateral)
+   PREVIEW + EXPORT — um único SVG: o que você vê é o que exporta
    ================================================================ */
-function wfMarkup(){
-  if(!sections.length) return `<div class="pv-empty">O preview aparece aqui conforme você adiciona seções e elementos.</div>`;
-  return sections.map((s,i)=>{
+function escapeXml(s){return String(s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));}
+function wrapTitle(t){
+  const max=12, words=(t||'seção').toUpperCase().trim().split(/\s+/), lines=[];
+  let cur='';
+  words.forEach(w=>{
+    while(w.length>max){ if(cur){lines.push(cur);cur='';} lines.push(w.slice(0,max)); w=w.slice(max); }
+    if(!w)return;
+    if((cur?cur+' '+w:w).length<=max) cur=cur?cur+' '+w:w;
+    else { if(cur)lines.push(cur); cur=w; }
+  });
+  if(cur)lines.push(cur);
+  if(lines.length>4){ lines.length=4; lines[3]=lines[3].slice(0,max-1)+'…'; }
+  return lines;
+}
+/* monta a página inteira como um SVG standalone (preview e export usam o mesmo) */
+function buildSVG(){
+  const PAGE_W=840, GUT=64, PAD=20, GAP=14, SP=18;
+  const cw=PAGE_W-GUT-PAD*2;
+  const body=[]; let y=2;
+  sections.forEach((s,i)=>{
     const num=String(i).padStart(2,'0');
-    const els=s.elements.length
-      ? s.elements.map(e=>{
-          const tall=TALL.has(e.id)?' tall':'';
-          let style='';
-          if(e.align==='left')   style='width:62%;margin-right:auto';
-          if(e.align==='center') style='width:62%;margin-left:auto;margin-right:auto';
-          if(e.align==='right')  style='width:62%;margin-left:auto';
-          return `<div class="wf-el${tall}" style="${style}">${I[e.id]||''}</div>`;
-        }).join('')
-      : `<div class="wf-empty">seção vazia</div>`;
-    return `<div class="wf-sec"><div class="wf-gutter"><span class="n">${num} —</span><span class="t">${(s.title||'seção')}</span></div><div class="wf-content">${els}</div></div>`;
-  }).join('');
+    const top=y; let ey=y+SP;
+    if(s.elements.length){
+      s.elements.forEach(e=>{
+        const w=e.align==='full'?cw:Math.round(cw*.62);
+        const h=Math.round(w/(TALL.has(e.id)?2.6:3.4));
+        let x=GUT+PAD;
+        if(e.align==='center') x=Math.round(GUT+PAD+(cw-w)/2);
+        if(e.align==='right')  x=GUT+PAD+cw-w;
+        body.push((I[e.id]||'').replace('<svg ',`<svg x="${x}" y="${ey}" width="${w}" height="${h}" `));
+        ey+=h+GAP;
+      });
+      ey+=SP-GAP;
+    }else{
+      body.push(`<rect x="${GUT+PAD}" y="${ey}" width="${cw}" height="46" fill="none" stroke="#ddd" stroke-dasharray="5,5" rx="4"/>`);
+      body.push(`<text x="${GUT+PAD+cw/2}" y="${ey+27}" font-size="11" fill="#bbb" font-style="italic" text-anchor="middle" font-family="Arial">seção vazia</text>`);
+      ey+=46+SP;
+    }
+    body.push(`<line x1="${GUT}" y1="${top}" x2="${GUT}" y2="${ey}" stroke="#1a1a1a" stroke-width="1.5"/>`);
+    body.push(`<text x="10" y="${top+22}" font-size="13" font-weight="800" fill="#1a1a1a" font-family="Arial">${num} —</text>`);
+    wrapTitle(s.title).forEach((ln,li)=>{
+      body.push(`<text x="10" y="${top+36+li*10}" font-size="7.5" font-weight="700" fill="#333" font-family="Arial">${escapeXml(ln)}</text>`);
+    });
+    if(i<sections.length-1) body.push(`<line x1="0" y1="${ey}" x2="${PAGE_W}" y2="${ey}" stroke="#1a1a1a" stroke-width="1.5"/>`);
+    y=ey;
+  });
+  const H=y+2;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${PAGE_W}" height="${H}" viewBox="0 0 ${PAGE_W} ${H}">`
+    +`<rect x="0" y="0" width="${PAGE_W}" height="${H}" fill="#ffffff"/>`
+    +body.join('')
+    +`<rect x="1" y="1" width="${PAGE_W-2}" height="${H-2}" fill="none" stroke="#1a1a1a" stroke-width="2" rx="3"/>`
+    +`</svg>`;
+  return {svg,w:PAGE_W,h:H};
 }
 function updatePreview(){
-  document.getElementById('preview').innerHTML=wfMarkup();
-  document.getElementById('preview').style.width=pvWidth+'px';
-  const fs=document.getElementById('fsPreview');
-  if(document.getElementById('fsOverlay').classList.contains('open')) fs.innerHTML=wfMarkup();
+  const pv=document.getElementById('preview');
+  pv.innerHTML=sections.length?buildSVG().svg
+    :`<div class="pv-empty">O preview aparece aqui conforme você adiciona seções e elementos.</div>`;
+  pv.style.width=pvWidth+'px';
+  if(document.getElementById('fsOverlay').classList.contains('open'))
+    document.getElementById('fsPreview').innerHTML=pv.innerHTML;
 }
 function zoom(d){
   pvWidth=Math.min(420,Math.max(240,pvWidth+d*40));
   updatePreview();
 }
 function openFS(){
-  document.getElementById('fsPreview').innerHTML=wfMarkup();
+  document.getElementById('fsPreview').innerHTML=document.getElementById('preview').innerHTML;
   document.getElementById('fsOverlay').classList.add('open');
 }
 function closeFS(){document.getElementById('fsOverlay').classList.remove('open');}
+
+/* ================================================================
+   EXPORT — SVG → canvas → PNG/base64 (100% offline)
+   ================================================================ */
+function svgToCanvas(scale){
+  return new Promise((resolve,reject)=>{
+    const {svg,w,h}=buildSVG();
+    const img=new Image();
+    img.onload=()=>{
+      const c=document.createElement('canvas');
+      c.width=Math.round(w*scale); c.height=Math.round(h*scale);
+      const ctx=c.getContext('2d');
+      ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height);
+      ctx.drawImage(img,0,0,c.width,c.height);
+      resolve(c);
+    };
+    img.onerror=reject;
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  });
+}
+function exportGuard(){ if(!sections.length){toast('Adicione ao menos uma seção');return false;} return true; }
+async function downloadPNG(){
+  if(!exportGuard())return;
+  try{
+    const c=await svgToCanvas(2);
+    const a=document.createElement('a');
+    a.download='wireframe-escopo.png'; a.href=c.toDataURL('image/png'); a.click();
+    toast('PNG baixado ('+c.width+'×'+c.height+'px)');
+  }catch(e){toast('Falha ao gerar o PNG');}
+}
+function downloadSVG(){
+  if(!exportGuard())return;
+  const a=document.createElement('a');
+  a.download='wireframe-escopo.svg';
+  a.href='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(buildSVG().svg);
+  a.click();
+  toast('SVG baixado');
+}
+async function copyImage(){
+  if(!exportGuard())return;
+  try{
+    const c=await svgToCanvas(2);
+    const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    toast('Imagem copiada — cole onde quiser');
+  }catch(e){toast('Navegador não permitiu copiar — use "Baixar PNG"');}
+}
+async function copyBase64(){
+  if(!exportGuard())return;
+  try{
+    const data=(await svgToCanvas(2)).toDataURL('image/png');
+    try{ await navigator.clipboard.writeText(data); }
+    catch(e){
+      const t=document.createElement('textarea');
+      t.value=data; document.body.appendChild(t); t.select();
+      document.execCommand('copy'); t.remove();
+    }
+    toast('Base64 PNG copiado ('+Math.round(data.length/1024)+' KB)');
+  }catch(e){toast('Falha ao gerar o base64');}
+}
 
 /* ================================================================
    PROMPT
