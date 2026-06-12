@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Construtor de Escopo · Wireframe Pro</title>
+<style>
+  :root{
+    --azul:#3b5bdb; --azul-cl:#5c7cfa;
+    --roxo:#7048e8; --roxo-cl:#9775fa;
+    --chumbo:#2b2d33; --chumbo-cl:#3a3d45;
+    --bg:#15161a; --bg2:#1e2025; --bg3:#26282e;
+    --linha:#33363d; --texto:#edf0f3; --texto-dim:#8d9097;
+    --ok:#37b24d; --radius:14px;
+    --grad:linear-gradient(135deg,var(--azul) 0%,var(--roxo) 100%);
+    --grad-soft:linear-gradient(90deg,rgba(59,91,219,.16),rgba(112,72,232,.07));
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(112,72,232,.14), transparent 60%),
+      radial-gradient(900px 400px at -10% 0%, rgba(59,91,219,.12), transparent 55%),
+      var(--bg);
+    color:var(--texto); line-height:1.5; min-height:100vh;
+  }
+  /* ============ HEADER ============ */
+  header{
+    background:var(--grad); padding:18px 28px;
+    position:sticky; top:0; z-index:50;
+    box-shadow:0 4px 28px rgba(0,0,0,.45);
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  header .brand{display:flex; align-items:center; gap:12px}
+  header .logo{
+    width:36px;height:36px;border:2.5px solid #fff;border-radius:9px;
+    display:grid;place-items:center;font-size:.72rem;font-weight:800;color:#fff;
+    background:rgba(255,255,255,.12);
+  }
+  header h1{font-size:1.2rem;font-weight:700;color:#fff;letter-spacing:-.3px}
+  header p{color:rgba(255,255,255,.82);font-size:.76rem;margin-top:1px}
+  header .head-actions{display:flex;gap:8px}
+  .hbtn{
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);color:#fff;
+    border-radius:9px;padding:8px 14px;font-size:.78rem;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:.15s;display:inline-flex;align-items:center;gap:6px;
+  }
+  .hbtn:hover{background:rgba(255,255,255,.26)}
+  /* ============ LAYOUT ============ */
+  .wrap{display:grid;grid-template-columns:1fr 430px;max-width:1480px;margin:0 auto;min-height:calc(100vh - 78px)}
+  .main{padding:24px 26px;border-right:1px solid var(--linha)}
+  .side{padding:22px 20px;position:sticky;top:78px;align-self:start;max-height:calc(100vh - 78px);overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+  @media(max-width:1020px){
+    .wrap{grid-template-columns:1fr}
+    .main{border-right:none;border-bottom:1px solid var(--linha)}
+    .side{position:static;max-height:none}
+  }
+  /* ============ TOOLBAR / SEÇÕES ============ */
+  .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+  .toolbar h2{font-size:1.02rem;font-weight:700;letter-spacing:-.2px}
+  .count-badge{background:var(--bg3);border:1px solid var(--linha);padding:5px 12px;border-radius:30px;font-size:.76rem;color:var(--texto-dim)}
+  .count-badge b{color:var(--azul-cl)}
+  .btn{
+    border:none;border-radius:10px;padding:10px 17px;font-size:.84rem;font-weight:600;
+    cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;
+  }
+  .btn-primary{background:var(--grad);color:#fff;box-shadow:0 4px 14px rgba(89,80,232,.35)}
+  .btn-primary:hover{filter:brightness(1.12);transform:translateY(-1px)}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;filter:none;box-shadow:none}
+  .btn-ghost{background:var(--bg3);color:var(--texto);border:1px solid var(--linha)}
+  .btn-ghost:hover{background:var(--chumbo-cl);border-color:var(--azul)}
+  .btn-sm{padding:7px 12px;font-size:.76rem;border-radius:8px}
+  .empty{border:2px dashed var(--linha);border-radius:var(--radius);padding:48px 24px;text-align:center;color:var(--texto-dim)}
+  .empty svg{opacity:.4;margin-bottom:14px}
+
+  .section-card{
+    background:var(--bg2);border:1px solid var(--linha);border-radius:var(--radius);
+    margin-bottom:14px;overflow:hidden;animation:pop .3s ease;transition:border-color .2s;
+  }
+  .section-card:hover{border-color:#454854}
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .section-head{
+    display:flex;align-items:center;gap:11px;padding:12px 14px;
+    background:var(--grad-soft);border-bottom:1px solid var(--linha);
+  }
+  .section-num{
+    width:34px;height:34px;border-radius:9px;background:var(--grad);color:#fff;
+    display:grid;place-items:center;font-weight:800;font-size:.84rem;flex-shrink:0;
+  }
+  .section-title-input{
+    background:transparent;border:none;color:var(--texto);font-size:.94rem;font-weight:600;
+    flex:1;font-family:inherit;padding:4px 6px;border-radius:6px;min-width:80px;
+  }
+  .section-title-input:focus{outline:none;background:rgba(255,255,255,.07)}
+  .sec-tag{
+    font-size:.6rem;font-weight:800;letter-spacing:.8px;color:var(--roxo-cl);
+    background:rgba(151,117,250,.12);border:1px solid rgba(151,117,250,.3);
+    padding:3px 8px;border-radius:20px;text-transform:uppercase;white-space:nowrap;
+  }
+  .section-actions{display:flex;gap:5px}
+  .icon-btn{
+    width:29px;height:29px;border-radius:8px;border:1px solid var(--linha);background:var(--bg3);
+    color:var(--texto-dim);cursor:pointer;display:grid;place-items:center;transition:.15s;font-size:.82rem;
+  }
+  .icon-btn:hover{color:#fff;border-color:var(--azul)}
+  .icon-btn.danger:hover{color:#ff6b6b;border-color:#ff6b6b}
+  .section-body{padding:13px 14px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:11px;min-height:6px}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;background:var(--bg3);
+    border:1px solid var(--linha);border-radius:11px;padding:6px 9px 6px 6px;font-size:.78rem;
+    animation:pop .2s;transition:border-color .15s;
+  }
+  .chip:hover{border-color:#4a4e59}
+  .chip .thumb{width:52px;height:36px;background:#fff;border-radius:6px;flex-shrink:0;overflow:hidden;display:grid;place-items:center;padding:3px}
+  .chip .thumb svg{width:100%;height:100%;display:block}
+  .chip .chip-label{display:flex;flex-direction:column;line-height:1.2;max-width:130px}
+  .chip .chip-label b{font-weight:600;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chip .chip-label small{font-size:.6rem;color:var(--roxo-cl)}
+  .chip .ctrl{display:flex;gap:2px;margin-left:2px}
+  .chip .ctrl button{
+    width:21px;height:21px;border:1px solid var(--linha);background:var(--bg2);border-radius:6px;
+    cursor:pointer;display:grid;place-items:center;color:var(--texto-dim);font-size:.66rem;padding:0;transition:.13s;
+  }
+  .chip .ctrl button.on{background:var(--grad);color:#fff;border-color:transparent}
+  .chip .ctrl button:hover{color:#fff;border-color:var(--azul)}
+  .chip .ctrl .sep{width:1px;background:var(--linha);margin:2px 3px}
+  .chip-x{cursor:pointer;color:var(--texto-dim);font-weight:700;padding:0 3px;line-height:1}
+  .chip-x:hover{color:#ff6b6b}
+  .empty-chips{color:var(--texto-dim);font-size:.77rem;font-style:italic}
+  .add-inline{display:flex;justify-content:center;margin:6px 0 18px}
+  .add-inline button{
+    background:transparent;border:1.5px dashed var(--linha);color:var(--texto-dim);
+    border-radius:11px;padding:10px 22px;font-size:.83rem;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:.16s;display:inline-flex;align-items:center;gap:7px;
+  }
+  .add-inline button:hover{border-color:var(--azul);color:var(--azul-cl);background:rgba(59,91,219,.08)}
+
+  /* ============ MODAL BIBLIOTECA ============ */
+  .overlay{
+    position:fixed;inset:0;background:rgba(8,9,11,.78);backdrop-filter:blur(5px);
+    z-index:100;display:none;align-items:center;justify-content:center;padding:18px;
+  }
+  .overlay.open{display:flex;animation:fade .2s}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .modal{
+    background:var(--bg2);border:1px solid var(--linha);border-radius:18px;
+    width:min(960px,100%);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;
+    box-shadow:0 28px 70px rgba(0,0,0,.65);animation:pop .25s;
+  }
+  .modal-head{padding:16px 20px;border-bottom:1px solid var(--linha);display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--grad-soft);flex-wrap:wrap}
+  .modal-head h3{font-size:1.02rem}
+  .modal-head small{color:var(--texto-dim);font-size:.76rem}
+  .lib-search{
+    background:var(--bg);border:1px solid var(--linha);border-radius:9px;color:var(--texto);
+    padding:9px 13px;font-size:.82rem;font-family:inherit;width:230px;
+  }
+  .lib-search:focus{outline:none;border-color:var(--azul)}
+  .cat-bar{display:flex;gap:6px;padding:12px 20px 0;flex-wrap:wrap}
+  .cat-pill{
+    background:var(--bg3);border:1px solid var(--linha);color:var(--texto-dim);
+    border-radius:30px;padding:6px 13px;font-size:.72rem;font-weight:700;cursor:pointer;
+    font-family:inherit;transition:.14s;letter-spacing:.3px;
+  }
+  .cat-pill.on{background:var(--grad);color:#fff;border-color:transparent}
+  .cat-pill:hover:not(.on){color:#fff;border-color:var(--azul)}
+  .modal-body{padding:16px 20px 22px;overflow-y:auto}
+  .cat-label{
+    font-size:.68rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--roxo-cl);
+    font-weight:800;margin:18px 0 10px;display:flex;align-items:center;gap:9px;
+  }
+  .cat-label:first-child{margin-top:2px}
+  .cat-label::after{content:'';flex:1;height:1px;background:var(--linha)}
+  .cat-label .tagx{font-size:.58rem;background:rgba(151,117,250,.12);border:1px solid rgba(151,117,250,.3);padding:2px 8px;border-radius:20px;letter-spacing:.5px}
+  .lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(172px,1fr));gap:13px}
+  .lib-item{
+    background:var(--bg);border:1px solid var(--linha);border-radius:13px;padding:12px;cursor:pointer;
+    transition:.16s;text-align:center;
+  }
+  .lib-item:hover{border-color:var(--azul);transform:translateY(-2px);box-shadow:0 8px 22px rgba(59,91,219,.28)}
+  .lib-item:hover .preview{box-shadow:inset 0 0 0 2px var(--azul-cl)}
+  .lib-item .preview{background:#fff;border-radius:9px;height:100px;margin-bottom:10px;overflow:hidden;display:grid;place-items:center;padding:9px;transition:.16s}
+  .lib-item .preview svg{width:100%;height:100%;display:block}
+  .lib-item .name{font-size:.8rem;font-weight:600;line-height:1.25}
+  .lib-item .add-tag{font-size:.66rem;color:var(--azul-cl);margin-top:4px;font-weight:700}
+
+  /* ============ PREVIEW ============ */
+  .pv-panel{background:var(--bg2);border:1px solid var(--linha);border-radius:var(--radius);overflow:hidden}
+  .pv-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--linha);background:var(--grad-soft)}
+  .pv-head h3{font-size:.9rem;display:flex;align-items:center;gap:8px}
+  .pv-tools{display:flex;gap:5px}
+  .pv-body{padding:14px;background:repeating-linear-gradient(45deg,#1a1c21 0 12px,#1b1d22 12px 24px);max-height:480px;overflow-y:auto}
+  .pv-page{
+    background:#fff;border:1.5px solid #1a1a1a;border-radius:4px;margin:0 auto;
+    transition:width .25s; box-shadow:0 14px 40px rgba(0,0,0,.5);
+  }
+  .pv-empty{color:#9aa;text-align:center;padding:46px 14px;font-size:.78rem;background:#fff;border-radius:4px}
+  /* página wireframe: faixa lateral + conteúdo */
+  .wf-sec{display:grid;grid-template-columns:54px 1fr;border-bottom:1.5px solid #1a1a1a;position:relative;transition:background .15s}
+  .wf-sec:last-child{border-bottom:none}
+  .wf-sec:hover{background:#fafaff}
+  .wf-gutter{border-right:1.5px solid #1a1a1a;padding:8px 5px;display:flex;flex-direction:column;gap:2px}
+  .wf-gutter .n{font-size:10px;font-weight:800;color:#1a1a1a;font-family:Arial}
+  .wf-gutter .t{font-size:6.5px;font-weight:700;color:#333;text-transform:uppercase;line-height:1.3;word-break:break-word;font-family:Arial}
+  .wf-content{padding:9px 10px;display:flex;flex-direction:column;gap:6px;min-height:46px}
+  .wf-el{aspect-ratio:3.4/1;height:auto;flex-shrink:0}
+  .wf-el svg{width:100%;height:100%;display:block}
+  .wf-el.tall{aspect-ratio:2.6/1}
+  .wf-empty{color:#c2c2c2;font-size:8.5px;font-style:italic;text-align:center;padding:10px;border:1px dashed #ddd;border-radius:3px;font-family:Arial}
+
+  /* ============ PROMPT ============ */
+  .gen-panel{background:var(--bg2);border:1px solid var(--linha);border-radius:var(--radius);padding:14px}
+  .gen-panel h3{font-size:.9rem;margin-bottom:9px;display:flex;align-items:center;gap:8px}
+  textarea{
+    width:100%;background:var(--bg);border:1px solid var(--linha);border-radius:10px;
+    color:var(--texto);padding:12px;font-size:.72rem;font-family:'SF Mono',Consolas,monospace;
+    line-height:1.55;resize:vertical;min-height:120px;
+  }
+  textarea:focus{outline:none;border-color:var(--azul)}
+  .side-actions{display:flex;gap:8px;margin-top:10px}
+  .side-actions .btn{flex:1;justify-content:center}
+
+  /* ============ FULLSCREEN PREVIEW ============ */
+  .fs-overlay{position:fixed;inset:0;background:rgba(8,9,11,.88);backdrop-filter:blur(6px);z-index:120;display:none;flex-direction:column;padding:22px}
+  .fs-overlay.open{display:flex;animation:fade .2s}
+  .fs-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .fs-bar h3{color:#fff;font-size:1rem}
+  .fs-scroll{flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start}
+
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:var(--grad);color:#fff;padding:12px 22px;border-radius:30px;font-size:.84rem;font-weight:600;
+    box-shadow:0 8px 24px rgba(0,0,0,.45);transition:.3s;z-index:300;opacity:0;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:var(--chumbo-cl);border-radius:6px}
+  ::-webkit-scrollbar-track{background:transparent}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="logo">WF</span>
+    <div>
+      <h1>Construtor de Escopo · Wireframe Pro</h1>
+      <p>Categorias semânticas HTML · até 10 seções · alinhamento por elemento · prompt para o GPT</p>
+    </div>
+  </div>
+  <div class="head-actions">
+    <button class="hbtn" onclick="saveScope()">💾 Salvar</button>
+    <button class="hbtn" onclick="loadScope()">📂 Carregar</button>
+    <button class="hbtn" onclick="clearAll()">🧹 Limpar</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- ============ COLUNA PRINCIPAL ============ -->
+  <div class="main">
+    <div class="toolbar">
+      <h2>Seções do escopo</h2>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="count-badge"><b id="secCount">0</b> / 10 seções</span>
+        <button class="btn btn-primary" id="addSecBtn" onclick="addSection()">＋ Adicionar seção</button>
+      </div>
+    </div>
+    <div id="sections"></div>
+    <div class="empty" id="emptyState">
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+      <p>Nenhuma seção ainda.<br>Clique em <b>"Adicionar seção"</b> para começar a montar seu escopo.</p>
+    </div>
+  </div>
+
+  <!-- ============ COLUNA LATERAL ============ -->
+  <div class="side">
+    <div class="pv-panel">
+      <div class="pv-head">
+        <h3>👁 Pré-visualização</h3>
+        <div class="pv-tools">
+          <button class="icon-btn" title="Diminuir zoom" onclick="zoom(-1)">−</button>
+          <button class="icon-btn" title="Aumentar zoom" onclick="zoom(1)">＋</button>
+          <button class="icon-btn" title="Tela cheia" onclick="openFS()">⛶</button>
+        </div>
+      </div>
+      <div class="pv-body">
+        <div class="pv-page" id="preview" style="width:340px">
+          <div class="pv-empty">O preview aparece aqui conforme você adiciona seções e elementos.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gen-panel">
+      <h3>⚡ Prompt para o GPT</h3>
+      <textarea id="promptOut" readonly placeholder="Adicione seções e elementos para gerar o prompt..."></textarea>
+      <div class="side-actions">
+        <button class="btn btn-primary btn-sm" onclick="generatePrompt()">Gerar prompt</button>
+        <button class="btn btn-ghost btn-sm" onclick="copyPrompt()">Copiar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL BIBLIOTECA -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3>Biblioteca de componentes</h3><small id="modalCtx"></small></div>
+      <input class="lib-search" id="libSearch" placeholder="🔎 Buscar componente..." oninput="renderLib()">
+      <button class="icon-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="cat-bar" id="catBar"></div>
+    <div class="modal-body" id="libGrid"></div>
+  </div>
+</div>
+
+<!-- PREVIEW FULLSCREEN -->
+<div class="fs-overlay" id="fsOverlay">
+  <div class="fs-bar">
+    <h3>👁 Pré-visualização do wireframe</h3>
+    <button class="hbtn" onclick="closeFS()">✕ Fechar</button>
+  </div>
+  <div class="fs-scroll"><div class="pv-page" id="fsPreview" style="width:560px"></div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================================================================
+   MINI-SVGs P&B (estilo lo-fi da skill wireframe-simples)
+   ================================================================ */
+const I = {
+/* ---------- HEADER ---------- */
+topbar:`<svg viewBox="0 0 120 40"><rect x="2" y="14" width="116" height="12" fill="#1a1a1a"/><text x="60" y="23" font-size="6" fill="#fff" text-anchor="middle" font-family="Arial">FRETE GRÁTIS • CUPOM • 6X</text><text x="8" y="24" font-size="8" fill="#fff" font-family="Arial">‹</text><text x="112" y="24" font-size="8" fill="#fff" text-anchor="end" font-family="Arial">›</text></svg>`,
+navbar:`<svg viewBox="0 0 120 40"><rect x="2" y="6" width="116" height="28" fill="#fff" stroke="#1a1a1a"/><circle cx="15" cy="20" r="7" fill="none" stroke="#1a1a1a"/><rect x="32" y="17" width="11" height="5" fill="#1a1a1a"/><rect x="48" y="17" width="11" height="5" fill="#1a1a1a"/><rect x="64" y="17" width="11" height="5" fill="#1a1a1a"/><rect x="90" y="12" width="24" height="16" fill="#999" stroke="#1a1a1a" rx="3"/></svg>`,
+navbar_center:`<svg viewBox="0 0 120 40"><rect x="2" y="6" width="116" height="28" fill="#fff" stroke="#1a1a1a"/><circle cx="60" cy="15" r="6" fill="none" stroke="#1a1a1a"/><rect x="30" y="25" width="12" height="4" fill="#1a1a1a"/><rect x="48" y="25" width="12" height="4" fill="#1a1a1a"/><rect x="66" y="25" width="12" height="4" fill="#1a1a1a"/><rect x="84" y="25" width="12" height="4" fill="#1a1a1a"/></svg>`,
+navbar_search:`<svg viewBox="0 0 120 40"><rect x="2" y="6" width="116" height="28" fill="#fff" stroke="#1a1a1a"/><circle cx="14" cy="20" r="6" fill="none" stroke="#1a1a1a"/><rect x="28" y="13" width="52" height="14" fill="#fff" stroke="#333" rx="7"/><circle cx="37" cy="20" r="3.5" fill="none" stroke="#333"/><circle cx="94" cy="20" r="6" fill="none" stroke="#333"/><circle cx="110" cy="20" r="6" fill="none" stroke="#333"/></svg>`,
+announce:`<svg viewBox="0 0 120 40"><rect x="2" y="13" width="116" height="14" fill="#f2f2f2" stroke="#333"/><circle cx="14" cy="20" r="4" fill="none" stroke="#1a1a1a"/><text x="14" y="22.5" font-size="6" text-anchor="middle" font-family="Arial">!</text><rect x="26" y="18" width="70" height="4" fill="#444"/><text x="110" y="23" font-size="8" fill="#333" font-family="Arial">✕</text></svg>`,
+/* ---------- NAV ---------- */
+breadcrumbs:`<svg viewBox="0 0 120 40"><text x="10" y="24" font-family="Arial" font-size="9" fill="#444">Início › Categoria › Página</text></svg>`,
+tabs:`<svg viewBox="0 0 120 40"><rect x="12" y="25" width="26" height="3" fill="#1a1a1a"/><text x="14" y="20" font-family="Arial" font-size="8" fill="#1a1a1a" font-weight="bold">Tab 1</text><text x="48" y="20" font-family="Arial" font-size="8" fill="#999">Tab 2</text><text x="80" y="20" font-family="Arial" font-size="8" fill="#999">Tab 3</text><line x1="10" y1="28" x2="110" y2="28" stroke="#ccc"/></svg>`,
+sidebar:`<svg viewBox="0 0 120 40"><rect x="2" y="2" width="32" height="36" fill="#f2f2f2" stroke="#333"/><rect x="6" y="8" width="24" height="4" fill="#999"/><rect x="6" y="16" width="24" height="4" fill="#1a1a1a"/><rect x="6" y="24" width="24" height="4" fill="#999"/><rect x="42" y="8" width="72" height="24" fill="none" stroke="#ddd"/></svg>`,
+mega_menu:`<svg viewBox="0 0 120 40"><rect x="2" y="2" width="116" height="10" fill="#fff" stroke="#1a1a1a"/><rect x="10" y="5" width="14" height="4" fill="#1a1a1a"/><rect x="2" y="12" width="116" height="26" fill="#f8f8f8" stroke="#333"/><rect x="10" y="17" width="22" height="3" fill="#1a1a1a"/><rect x="10" y="24" width="18" height="2.5" fill="#666"/><rect x="10" y="29" width="18" height="2.5" fill="#666"/><rect x="48" y="17" width="22" height="3" fill="#1a1a1a"/><rect x="48" y="24" width="18" height="2.5" fill="#666"/><rect x="86" y="16" width="24" height="16" fill="#f2f2f2" stroke="#999"/></svg>`,
+pagination:`<svg viewBox="0 0 120 40"><text x="28" y="24" font-size="11" fill="#1a1a1a" font-family="Arial">‹</text><rect x="40" y="13" width="14" height="14" fill="#999" stroke="#1a1a1a"/><text x="47" y="23" font-size="8" text-anchor="middle" fill="#fff" font-family="Arial">1</text><text x="62" y="23" font-size="9" fill="#444" font-family="Arial">2</text><text x="74" y="23" font-size="9" fill="#444" font-family="Arial">3</text><text x="88" y="24" font-size="11" fill="#1a1a1a" font-family="Arial">›</text></svg>`,
+anchor_menu:`<svg viewBox="0 0 120 40"><rect x="14" y="15" width="22" height="10" fill="#999" stroke="#333" rx="5"/><rect x="42" y="15" width="22" height="10" fill="#fff" stroke="#333" rx="5"/><rect x="70" y="15" width="22" height="10" fill="#fff" stroke="#333" rx="5"/></svg>`,
+/* ---------- HERO ---------- */
+hero:`<svg viewBox="0 0 120 40"><rect x="2" y="2" width="116" height="36" fill="#e8e8e8" stroke="#333"/><line x1="2" y1="2" x2="118" y2="38" stroke="#333"/><line x1="118" y1="2" x2="2" y2="38" stroke="#333"/><text x="60" y="22" font-size="7" font-weight="bold" text-anchor="middle" fill="#333" font-family="Arial">HERO IMG</text></svg>`,
+hero_split:`<svg viewBox="0 0 120 40"><rect x="6" y="8" width="22" height="6" fill="#1a1a1a"/><rect x="6" y="18" width="40" height="2.5" fill="#444"/><rect x="6" y="23" width="40" height="2.5" fill="#444"/><rect x="6" y="29" width="20" height="7" fill="#999" stroke="#1a1a1a" rx="2"/><rect x="60" y="4" width="54" height="32" fill="#f2f2f2" stroke="#333"/><line x1="60" y1="4" x2="114" y2="36" stroke="#333"/><line x1="114" y1="4" x2="60" y2="36" stroke="#333"/></svg>`,
+hero_carousel:`<svg viewBox="0 0 120 40"><rect x="10" y="3" width="100" height="28" fill="#e8e8e8" stroke="#333"/><line x1="10" y1="3" x2="110" y2="31" stroke="#333"/><line x1="110" y1="3" x2="10" y2="31" stroke="#333"/><text x="4" y="20" font-size="10" font-family="Arial">‹</text><text x="113" y="20" font-size="10" font-family="Arial">›</text><circle cx="54" cy="36" r="2" fill="#1a1a1a"/><circle cx="62" cy="36" r="2" fill="#ccc"/><circle cx="70" cy="36" r="2" fill="#ccc"/></svg>`,
+hero_video:`<svg viewBox="0 0 120 40"><rect x="14" y="3" width="92" height="34" fill="#e8e8e8" stroke="#333"/><circle cx="60" cy="20" r="9" fill="#fff" stroke="#1a1a1a"/><path d="M57 15 v10 l9 -5 z" fill="#1a1a1a"/></svg>`,
+hero_form:`<svg viewBox="0 0 120 40"><rect x="6" y="8" width="26" height="6" fill="#1a1a1a"/><rect x="6" y="18" width="44" height="2.5" fill="#444"/><rect x="6" y="23" width="36" height="2.5" fill="#444"/><rect x="62" y="6" width="52" height="28" fill="#f8f8f8" stroke="#333" rx="3"/><rect x="67" y="11" width="42" height="7" fill="#fff" stroke="#999" rx="2"/><rect x="67" y="21" width="42" height="8" fill="#999" stroke="#1a1a1a" rx="2"/></svg>`,
+/* ---------- SEÇÃO / CONTEÚDO ---------- */
+heading:`<svg viewBox="0 0 120 40"><rect x="10" y="12" width="72" height="9" fill="#1a1a1a" rx="2"/><rect x="10" y="26" width="46" height="5" fill="#1a1a1a" rx="2"/></svg>`,
+paragraph:`<svg viewBox="0 0 120 40"><rect x="10" y="9" width="100" height="3" fill="#444"/><rect x="10" y="17" width="100" height="3" fill="#444"/><rect x="10" y="25" width="62" height="3" fill="#444"/></svg>`,
+button:`<svg viewBox="0 0 120 40"><rect x="34" y="12" width="52" height="16" fill="#999" stroke="#1a1a1a" rx="4"/><text x="60" y="22.5" font-size="6.5" text-anchor="middle" fill="#fff" font-weight="bold" font-family="Arial">CTA</text></svg>`,
+grid:`<svg viewBox="0 0 120 40"><rect x="4" y="6" width="24" height="28" fill="#fff" stroke="#333"/><rect x="7" y="9" width="18" height="13" fill="#f2f2f2" stroke="#999"/><rect x="7" y="25" width="14" height="3" fill="#1a1a1a"/><rect x="34" y="6" width="24" height="28" fill="#fff" stroke="#333"/><rect x="37" y="9" width="18" height="13" fill="#f2f2f2" stroke="#999"/><rect x="37" y="25" width="14" height="3" fill="#1a1a1a"/><rect x="64" y="6" width="24" height="28" fill="#fff" stroke="#333"/><rect x="67" y="9" width="18" height="13" fill="#f2f2f2" stroke="#999"/><rect x="67" y="25" width="14" height="3" fill="#1a1a1a"/><rect x="94" y="6" width="22" height="28" fill="#fff" stroke="#333"/><rect x="97" y="9" width="16" height="13" fill="#f2f2f2" stroke="#999"/><rect x="97" y="25" width="12" height="3" fill="#1a1a1a"/></svg>`,
+carousel:`<svg viewBox="0 0 120 40"><text x="4" y="22" font-size="12" fill="#1a1a1a" font-family="Arial">‹</text><rect x="16" y="6" width="27" height="22" fill="#f2f2f2" stroke="#333"/><rect x="47" y="6" width="27" height="22" fill="#f2f2f2" stroke="#333"/><rect x="78" y="6" width="27" height="22" fill="#f2f2f2" stroke="#333"/><text x="110" y="22" font-size="12" fill="#1a1a1a" font-family="Arial">›</text><circle cx="53" cy="34" r="2" fill="#1a1a1a"/><circle cx="61" cy="34" r="2" fill="#ccc"/><circle cx="69" cy="34" r="2" fill="#ccc"/></svg>`,
+categories:`<svg viewBox="0 0 120 40"><circle cx="22" cy="17" r="11" fill="#f2f2f2" stroke="#333"/><circle cx="50" cy="17" r="11" fill="#f2f2f2" stroke="#333"/><circle cx="78" cy="17" r="11" fill="#f2f2f2" stroke="#333"/><circle cx="106" cy="17" r="11" fill="#f2f2f2" stroke="#333"/><rect x="14" y="32" width="16" height="3" fill="#444"/><rect x="42" y="32" width="16" height="3" fill="#444"/><rect x="70" y="32" width="16" height="3" fill="#444"/><rect x="98" y="32" width="16" height="3" fill="#444"/></svg>`,
+benefits:`<svg viewBox="0 0 120 40"><rect x="5" y="9" width="25" height="22" fill="#fff" stroke="#333" rx="3"/><circle cx="17" cy="17" r="4" fill="none" stroke="#1a1a1a"/><rect x="9" y="25" width="17" height="2.5" fill="#444"/><rect x="34" y="9" width="25" height="22" fill="#fff" stroke="#333" rx="3"/><circle cx="46" cy="17" r="4" fill="none" stroke="#1a1a1a"/><rect x="38" y="25" width="17" height="2.5" fill="#444"/><rect x="63" y="9" width="25" height="22" fill="#fff" stroke="#333" rx="3"/><circle cx="75" cy="17" r="4" fill="none" stroke="#1a1a1a"/><rect x="67" y="25" width="17" height="2.5" fill="#444"/><rect x="92" y="9" width="24" height="22" fill="#fff" stroke="#333" rx="3"/><circle cx="104" cy="17" r="4" fill="none" stroke="#1a1a1a"/><rect x="96" y="25" width="16" height="2.5" fill="#444"/></svg>`,
+pricing:`<svg viewBox="0 0 120 40"><rect x="8" y="8" width="30" height="28" fill="#fff" stroke="#333" rx="3"/><rect x="14" y="14" width="18" height="4" fill="#1a1a1a"/><rect x="14" y="22" width="14" height="2.5" fill="#444"/><rect x="45" y="4" width="30" height="32" fill="#fff" stroke="#1a1a1a" stroke-width="1.5" rx="3"/><rect x="50" y="1" width="20" height="6" fill="#fff" stroke="#1a1a1a" rx="3"/><rect x="51" y="11" width="18" height="5" fill="#1a1a1a"/><rect x="51" y="20" width="14" height="2.5" fill="#444"/><rect x="51" y="27" width="18" height="6" fill="#999" stroke="#1a1a1a" rx="2"/><rect x="82" y="8" width="30" height="28" fill="#fff" stroke="#333" rx="3"/><rect x="88" y="14" width="18" height="4" fill="#1a1a1a"/><rect x="88" y="22" width="14" height="2.5" fill="#444"/></svg>`,
+stats:`<svg viewBox="0 0 120 40"><rect x="8" y="11" width="24" height="10" fill="#1a1a1a"/><rect x="10" y="26" width="20" height="3" fill="#666"/><rect x="48" y="11" width="24" height="10" fill="#1a1a1a"/><rect x="50" y="26" width="20" height="3" fill="#666"/><rect x="88" y="11" width="24" height="10" fill="#1a1a1a"/><rect x="90" y="26" width="20" height="3" fill="#666"/></svg>`,
+stepper:`<svg viewBox="0 0 120 40"><circle cx="20" cy="20" r="8" fill="#fff" stroke="#1a1a1a"/><text x="20" y="23" font-size="8" text-anchor="middle" font-family="Arial">1</text><line x1="28" y1="20" x2="52" y2="20" stroke="#1a1a1a" stroke-dasharray="3,3"/><circle cx="60" cy="20" r="8" fill="#fff" stroke="#1a1a1a"/><text x="60" y="23" font-size="8" text-anchor="middle" font-family="Arial">2</text><line x1="68" y1="20" x2="92" y2="20" stroke="#1a1a1a" stroke-dasharray="3,3"/><circle cx="100" cy="20" r="8" fill="#fff" stroke="#1a1a1a"/><text x="100" y="23" font-size="8" text-anchor="middle" font-family="Arial">3</text></svg>`,
+newsletter:`<svg viewBox="0 0 120 40"><rect x="6" y="6" width="108" height="28" fill="#f2f2f2" stroke="#333" rx="3"/><rect x="22" y="12" width="48" height="4" fill="#1a1a1a"/><rect x="22" y="20" width="44" height="9" fill="#fff" stroke="#333" rx="2"/><rect x="70" y="20" width="28" height="9" fill="#999" stroke="#1a1a1a" rx="2"/></svg>`,
+accordion:`<svg viewBox="0 0 120 40"><rect x="10" y="6" width="100" height="10" fill="#fff" stroke="#333"/><text x="102" y="14" font-size="9" fill="#1a1a1a" font-family="Arial">−</text><rect x="15" y="10" width="42" height="3" fill="#1a1a1a"/><rect x="10" y="18" width="100" height="8" fill="#fafafa" stroke="#ddd"/><rect x="15" y="21" width="80" height="2" fill="#999"/><rect x="10" y="28" width="100" height="10" fill="#fff" stroke="#333"/><text x="102" y="36" font-size="9" fill="#1a1a1a" font-family="Arial">+</text><rect x="15" y="32" width="42" height="3" fill="#1a1a1a"/></svg>`,
+cta_banner:`<svg viewBox="0 0 120 40"><rect x="6" y="6" width="108" height="28" fill="#e8e8e8" stroke="#333"/><rect x="16" y="13" width="48" height="6" fill="#1a1a1a"/><rect x="16" y="23" width="34" height="3" fill="#666"/><rect x="78" y="14" width="28" height="12" fill="#999" stroke="#1a1a1a" rx="3"/></svg>`,
+gallery:`<svg viewBox="0 0 120 40"><rect x="6" y="6" width="34" height="28" fill="#f2f2f2" stroke="#333"/><rect x="44" y="6" width="16" height="13" fill="#f2f2f2" stroke="#333"/><rect x="44" y="21" width="16" height="13" fill="#f2f2f2" stroke="#333"/><rect x="64" y="6" width="16" height="13" fill="#f2f2f2" stroke="#333"/><rect x="64" y="21" width="16" height="13" fill="#f2f2f2" stroke="#333"/><rect x="84" y="6" width="30" height="28" fill="#f2f2f2" stroke="#333"/></svg>`,
+logos:`<svg viewBox="0 0 120 40"><rect x="8" y="14" width="20" height="12" fill="#f2f2f2" stroke="#999"/><rect x="34" y="14" width="20" height="12" fill="#f2f2f2" stroke="#999"/><rect x="60" y="14" width="20" height="12" fill="#f2f2f2" stroke="#999"/><rect x="86" y="14" width="20" height="12" fill="#f2f2f2" stroke="#999"/></svg>`,
+map:`<svg viewBox="0 0 120 40"><rect x="18" y="4" width="84" height="32" fill="#f2f2f2" stroke="#333"/><path d="M32 36 Q40 18 56 23 T84 12" fill="none" stroke="#999"/><circle cx="62" cy="19" r="4" fill="#999" stroke="#1a1a1a"/><line x1="62" y1="23" x2="62" y2="29" stroke="#1a1a1a"/></svg>`,
+countdown:`<svg viewBox="0 0 120 40"><rect x="22" y="11" width="17" height="18" fill="#1a1a1a" rx="2"/><rect x="43" y="11" width="17" height="18" fill="#1a1a1a" rx="2"/><rect x="64" y="11" width="17" height="18" fill="#1a1a1a" rx="2"/><rect x="85" y="11" width="17" height="18" fill="#1a1a1a" rx="2"/><text x="30" y="23" font-size="8" fill="#fff" text-anchor="middle" font-family="Arial">00</text><text x="51" y="23" font-size="8" fill="#fff" text-anchor="middle" font-family="Arial">12</text><text x="72" y="23" font-size="8" fill="#fff" text-anchor="middle" font-family="Arial">45</text><text x="93" y="23" font-size="8" fill="#fff" text-anchor="middle" font-family="Arial">59</text></svg>`,
+filters:`<svg viewBox="0 0 120 40"><rect x="8" y="13" width="26" height="13" fill="#999" stroke="#333" rx="6"/><rect x="40" y="13" width="26" height="13" fill="#fff" stroke="#333" rx="6"/><rect x="72" y="13" width="26" height="13" fill="#fff" stroke="#333" rx="6"/><rect x="104" y="13" width="10" height="13" fill="#fff" stroke="#333" rx="6"/></svg>`,
+team:`<svg viewBox="0 0 120 40"><circle cx="24" cy="14" r="8" fill="#f2f2f2" stroke="#333"/><rect x="14" y="26" width="20" height="3" fill="#1a1a1a"/><rect x="17" y="32" width="14" height="2" fill="#666"/><circle cx="60" cy="14" r="8" fill="#f2f2f2" stroke="#333"/><rect x="50" y="26" width="20" height="3" fill="#1a1a1a"/><rect x="53" y="32" width="14" height="2" fill="#666"/><circle cx="96" cy="14" r="8" fill="#f2f2f2" stroke="#333"/><rect x="86" y="26" width="20" height="3" fill="#1a1a1a"/><rect x="89" y="32" width="14" height="2" fill="#666"/></svg>`,
+timeline:`<svg viewBox="0 0 120 40"><line x1="16" y1="6" x2="16" y2="34" stroke="#1a1a1a"/><circle cx="16" cy="10" r="3.5" fill="#999" stroke="#1a1a1a"/><rect x="26" y="7" width="50" height="3" fill="#1a1a1a"/><rect x="26" y="13" width="36" height="2" fill="#666"/><circle cx="16" cy="24" r="3.5" fill="#fff" stroke="#1a1a1a"/><rect x="26" y="21" width="50" height="3" fill="#1a1a1a"/><rect x="26" y="27" width="36" height="2" fill="#666"/></svg>`,
+comparison:`<svg viewBox="0 0 120 40"><rect x="10" y="5" width="100" height="8" fill="#999" stroke="#333"/><rect x="10" y="13" width="100" height="7" fill="#fff" stroke="#333"/><rect x="10" y="20" width="100" height="7" fill="#f2f2f2" stroke="#333"/><rect x="10" y="27" width="100" height="7" fill="#fff" stroke="#333"/><line x1="45" y1="5" x2="45" y2="34" stroke="#333"/><line x1="78" y1="5" x2="78" y2="34" stroke="#333"/><text x="58" y="26" font-size="7" font-family="Arial">✓</text><text x="92" y="26" font-size="7" font-family="Arial">✕</text></svg>`,
+contact_form:`<svg viewBox="0 0 120 40"><rect x="22" y="4" width="76" height="32" fill="#f8f8f8" stroke="#333" rx="3"/><rect x="28" y="9" width="64" height="6" fill="#fff" stroke="#999" rx="1.5"/><rect x="28" y="18" width="64" height="6" fill="#fff" stroke="#999" rx="1.5"/><rect x="28" y="27" width="30" height="6" fill="#999" stroke="#1a1a1a" rx="1.5"/></svg>`,
+login_form:`<svg viewBox="0 0 120 40"><rect x="34" y="3" width="52" height="34" fill="#fff" stroke="#333" rx="3"/><circle cx="60" cy="10" r="4" fill="none" stroke="#1a1a1a"/><rect x="40" y="17" width="40" height="5" fill="#fff" stroke="#999" rx="1.5"/><rect x="40" y="24" width="40" height="5" fill="#fff" stroke="#999" rx="1.5"/><rect x="40" y="31" width="40" height="4" fill="#999" stroke="#1a1a1a" rx="1.5"/></svg>`,
+divider_el:`<svg viewBox="0 0 120 40"><line x1="10" y1="20" x2="110" y2="20" stroke="#1a1a1a"/></svg>`,
+spacer:`<svg viewBox="0 0 120 40"><rect x="8" y="8" width="104" height="24" fill="none" stroke="#ccc" stroke-dasharray="4,4"/><text x="60" y="23" font-size="8" fill="#bbb" text-anchor="middle" font-family="Arial">espaço</text></svg>`,
+/* ---------- ARTIGO ---------- */
+image:`<svg viewBox="0 0 120 40"><rect x="30" y="4" width="60" height="32" fill="#f2f2f2" stroke="#333"/><line x1="30" y1="4" x2="90" y2="36" stroke="#333"/><line x1="90" y1="4" x2="30" y2="36" stroke="#333"/></svg>`,
+video:`<svg viewBox="0 0 120 40"><rect x="30" y="4" width="60" height="32" fill="#f2f2f2" stroke="#333"/><path d="M54 12 v16 l14 -8 z" fill="#999" stroke="#1a1a1a"/></svg>`,
+avatar:`<svg viewBox="0 0 120 40"><circle cx="60" cy="20" r="13" fill="#fff" stroke="#1a1a1a"/><circle cx="60" cy="16" r="4.5" fill="none" stroke="#1a1a1a"/><path d="M51 29 q9 -8 18 0" fill="none" stroke="#1a1a1a"/></svg>`,
+card:`<svg viewBox="0 0 120 40"><rect x="38" y="3" width="44" height="34" fill="#fff" stroke="#333" rx="3"/><rect x="42" y="6" width="36" height="14" fill="#f2f2f2" stroke="#999"/><rect x="42" y="23" width="28" height="4" fill="#1a1a1a"/><rect x="42" y="30" width="36" height="3" fill="#999"/></svg>`,
+blog_card:`<svg viewBox="0 0 120 40"><rect x="20" y="3" width="80" height="34" fill="#fff" stroke="#333" rx="3"/><rect x="24" y="6" width="32" height="28" fill="#f2f2f2" stroke="#999"/><rect x="60" y="8" width="36" height="4" fill="#1a1a1a"/><rect x="60" y="16" width="36" height="2.5" fill="#666"/><rect x="60" y="21" width="36" height="2.5" fill="#666"/><rect x="60" y="28" width="20" height="3" fill="#999"/></svg>`,
+list:`<svg viewBox="0 0 120 40"><circle cx="18" cy="11" r="2.5" fill="#1a1a1a"/><rect x="26" y="9" width="80" height="4" fill="#444"/><circle cx="18" cy="20" r="2.5" fill="#1a1a1a"/><rect x="26" y="18" width="80" height="4" fill="#444"/><circle cx="18" cy="29" r="2.5" fill="#1a1a1a"/><rect x="26" y="27" width="60" height="4" fill="#444"/></svg>`,
+checklist:`<svg viewBox="0 0 120 40"><text x="14" y="14" font-size="9" font-family="Arial">✓</text><rect x="26" y="8" width="80" height="4" fill="#444"/><text x="14" y="24" font-size="9" font-family="Arial">✓</text><rect x="26" y="18" width="80" height="4" fill="#444"/><text x="14" y="34" font-size="9" font-family="Arial">✓</text><rect x="26" y="28" width="60" height="4" fill="#444"/></svg>`,
+table:`<svg viewBox="0 0 120 40"><rect x="6" y="6" width="108" height="8" fill="#999" stroke="#333"/><rect x="6" y="14" width="108" height="8" fill="#fff" stroke="#333"/><rect x="6" y="22" width="108" height="8" fill="#f2f2f2" stroke="#333"/><rect x="6" y="30" width="108" height="6" fill="#fff" stroke="#333"/><line x1="42" y1="6" x2="42" y2="36" stroke="#333"/><line x1="78" y1="6" x2="78" y2="36" stroke="#333"/></svg>`,
+quote:`<svg viewBox="0 0 120 40"><circle cx="20" cy="20" r="11" fill="#fff" stroke="#1a1a1a"/><rect x="38" y="10" width="70" height="3" fill="#444"/><rect x="38" y="17" width="70" height="3" fill="#444"/><rect x="38" y="27" width="34" height="5" fill="#1a1a1a"/></svg>`,
+rating:`<svg viewBox="0 0 120 40"><g fill="#1a1a1a"><path d="M30 13l2 5 5 0-4 3 1.5 5-4.5-3-4.5 3 1.5-5-4-3 5 0z"/><path d="M50 13l2 5 5 0-4 3 1.5 5-4.5-3-4.5 3 1.5-5-4-3 5 0z"/><path d="M70 13l2 5 5 0-4 3 1.5 5-4.5-3-4.5 3 1.5-5-4-3 5 0z"/></g><path d="M90 13l2 5 5 0-4 3 1.5 5-4.5-3-4.5 3 1.5-5-4-3 5 0z" fill="none" stroke="#1a1a1a"/></svg>`,
+author:`<svg viewBox="0 0 120 40"><circle cx="26" cy="20" r="10" fill="#f2f2f2" stroke="#333"/><rect x="44" y="13" width="40" height="4" fill="#1a1a1a"/><rect x="44" y="22" width="56" height="2.5" fill="#666"/><rect x="44" y="27" width="44" height="2.5" fill="#666"/></svg>`,
+comments:`<svg viewBox="0 0 120 40"><circle cx="18" cy="12" r="5" fill="#f2f2f2" stroke="#333"/><rect x="28" y="7" width="80" height="10" fill="#f8f8f8" stroke="#999" rx="3"/><rect x="32" y="11" width="50" height="2.5" fill="#444"/><circle cx="18" cy="29" r="5" fill="#f2f2f2" stroke="#333"/><rect x="28" y="24" width="80" height="10" fill="#f8f8f8" stroke="#999" rx="3"/><rect x="32" y="28" width="50" height="2.5" fill="#444"/></svg>`,
+share:`<svg viewBox="0 0 120 40"><circle cx="40" cy="20" r="8" fill="#fff" stroke="#1a1a1a"/><circle cx="60" cy="20" r="8" fill="#fff" stroke="#1a1a1a"/><circle cx="80" cy="20" r="8" fill="#fff" stroke="#1a1a1a"/></svg>`,
+cart:`<svg viewBox="0 0 120 40"><rect x="12" y="7" width="96" height="26" fill="#fff" stroke="#333"/><rect x="18" y="12" width="16" height="16" fill="#f2f2f2" stroke="#999"/><rect x="40" y="14" width="34" height="4" fill="#1a1a1a"/><rect x="40" y="22" width="20" height="3" fill="#666"/><rect x="86" y="15" width="16" height="9" fill="#999" stroke="#1a1a1a"/></svg>`,
+progress:`<svg viewBox="0 0 120 40"><rect x="12" y="16" width="96" height="8" fill="#f2f2f2" stroke="#333" rx="4"/><rect x="12" y="16" width="58" height="8" fill="#999" rx="4"/></svg>`,
+badge:`<svg viewBox="0 0 120 40"><rect x="30" y="13" width="28" height="13" fill="#1a1a1a" rx="6"/><text x="44" y="22" font-size="6" fill="#fff" text-anchor="middle" font-family="Arial">NOVO</text><rect x="64" y="13" width="28" height="13" fill="#fff" stroke="#1a1a1a" rx="6"/><text x="78" y="22" font-size="6" fill="#1a1a1a" text-anchor="middle" font-family="Arial">−20%</text></svg>`,
+/* ---------- ASIDE ---------- */
+aside_widget:`<svg viewBox="0 0 120 40"><rect x="34" y="3" width="52" height="34" fill="#f8f8f8" stroke="#333" rx="3"/><rect x="39" y="8" width="26" height="4" fill="#1a1a1a"/><rect x="39" y="16" width="42" height="2.5" fill="#666"/><rect x="39" y="21" width="42" height="2.5" fill="#666"/><rect x="39" y="26" width="42" height="2.5" fill="#666"/></svg>`,
+social:`<svg viewBox="0 0 120 40"><circle cx="36" cy="20" r="9" fill="#fff" stroke="#1a1a1a"/><circle cx="60" cy="20" r="9" fill="#fff" stroke="#1a1a1a"/><circle cx="84" cy="20" r="9" fill="#fff" stroke="#1a1a1a"/></svg>`,
+fab:`<svg viewBox="0 0 120 40"><circle cx="98" cy="21" r="13" fill="#fff" stroke="#1a1a1a" stroke-width="1.5"/><text x="98" y="25" font-size="11" text-anchor="middle" font-family="Arial">☎</text></svg>`,
+alert:`<svg viewBox="0 0 120 40"><rect x="8" y="11" width="104" height="18" fill="#f2f2f2" stroke="#333" rx="3"/><circle cx="20" cy="20" r="5" fill="none" stroke="#1a1a1a"/><text x="20" y="23" font-size="7" text-anchor="middle" font-family="Arial">!</text><rect x="32" y="18" width="58" height="4" fill="#444"/><text x="105" y="23" font-size="8" fill="#333" font-family="Arial">✕</text></svg>`,
+modal:`<svg viewBox="0 0 120 40"><rect x="2" y="2" width="116" height="36" fill="#ddd"/><rect x="28" y="6" width="64" height="28" fill="#fff" stroke="#1a1a1a" rx="3"/><rect x="34" y="11" width="32" height="4" fill="#1a1a1a"/><text x="86" y="14" font-size="7" fill="#333" font-family="Arial">✕</text><rect x="34" y="19" width="50" height="2.5" fill="#666"/><rect x="34" y="26" width="22" height="6" fill="#999" stroke="#1a1a1a" rx="2"/></svg>`,
+cookie:`<svg viewBox="0 0 120 40"><rect x="8" y="20" width="104" height="16" fill="#fff" stroke="#1a1a1a" rx="3"/><rect x="14" y="26" width="52" height="3" fill="#444"/><rect x="74" y="24" width="16" height="8" fill="#999" stroke="#1a1a1a" rx="2"/><rect x="93" y="24" width="14" height="8" fill="#fff" stroke="#333" rx="2"/></svg>`,
+/* ---------- FOOTER ---------- */
+footer:`<svg viewBox="0 0 120 40"><rect x="2" y="2" width="116" height="36" fill="#f8f8f8" stroke="#333"/><circle cx="14" cy="11" r="5" fill="none" stroke="#1a1a1a"/><rect x="8" y="20" width="16" height="2.5" fill="#666"/><rect x="8" y="25" width="16" height="2.5" fill="#666"/><rect x="36" y="8" width="18" height="3" fill="#1a1a1a"/><rect x="36" y="15" width="14" height="2.5" fill="#666"/><rect x="36" y="20" width="14" height="2.5" fill="#666"/><rect x="64" y="8" width="18" height="3" fill="#1a1a1a"/><rect x="64" y="15" width="14" height="2.5" fill="#666"/><rect x="92" y="8" width="18" height="3" fill="#1a1a1a"/><rect x="92" y="15" width="14" height="2.5" fill="#666"/><line x1="8" y1="32" x2="112" y2="32" stroke="#ddd"/></svg>`,
+footer_simple:`<svg viewBox="0 0 120 40"><rect x="2" y="8" width="116" height="24" fill="#f8f8f8" stroke="#333"/><circle cx="60" cy="16" r="4" fill="none" stroke="#1a1a1a"/><rect x="36" y="24" width="48" height="2.5" fill="#666"/></svg>`,
+payments:`<svg viewBox="0 0 120 40"><rect x="10" y="13" width="18" height="13" fill="#fff" stroke="#333" rx="2"/><rect x="32" y="13" width="18" height="13" fill="#fff" stroke="#333" rx="2"/><rect x="54" y="13" width="18" height="13" fill="#fff" stroke="#333" rx="2"/><rect x="76" y="13" width="18" height="13" fill="#fff" stroke="#333" rx="2"/><rect x="98" y="13" width="14" height="13" fill="#fff" stroke="#333" rx="2"/></svg>`,
+copyright:`<svg viewBox="0 0 120 40"><line x1="10" y1="14" x2="110" y2="14" stroke="#ddd"/><text x="60" y="27" font-size="7" fill="#666" text-anchor="middle" font-family="Arial">© 2025 Marca. Direitos reservados.</text></svg>`,
+app_badges:`<svg viewBox="0 0 120 40"><rect x="28" y="13" width="30" height="14" fill="#1a1a1a" rx="3"/><text x="43" y="22" font-size="5.5" fill="#fff" text-anchor="middle" font-family="Arial">APP STORE</text><rect x="62" y="13" width="30" height="14" fill="#1a1a1a" rx="3"/><text x="77" y="22" font-size="5.5" fill="#fff" text-anchor="middle" font-family="Arial">PLAY STORE</text></svg>`,
+};
+
+/* ================================================================
+   BIBLIOTECA — categorias do HTML SEMÂNTICO
+   ================================================================ */
+const LIBRARY = [
+  {cat:'&lt;header&gt; — Cabeçalho', tag:'header', items:[
+    {id:'topbar', name:'Topbar / Avisos rotativos'},
+    {id:'announce', name:'Barra de anúncio'},
+    {id:'navbar', name:'Navbar (logo + links + CTA)'},
+    {id:'navbar_center', name:'Navbar logo centralizado'},
+    {id:'navbar_search', name:'Navbar com busca + ícones'},
+  ]},
+  {cat:'&lt;nav&gt; — Navegação', tag:'nav', items:[
+    {id:'breadcrumbs', name:'Breadcrumbs'},
+    {id:'tabs', name:'Tabs'},
+    {id:'anchor_menu', name:'Menu âncora / pills'},
+    {id:'sidebar', name:'Sidebar de navegação'},
+    {id:'mega_menu', name:'Mega menu'},
+    {id:'pagination', name:'Paginação'},
+  ]},
+  {cat:'Hero — Destaque principal', tag:'hero', items:[
+    {id:'hero', name:'Hero banner (imagem)'},
+    {id:'hero_split', name:'Hero dividido (texto + img)'},
+    {id:'hero_carousel', name:'Hero carrossel'},
+    {id:'hero_video', name:'Hero com vídeo'},
+    {id:'hero_form', name:'Hero com formulário'},
+  ]},
+  {cat:'&lt;section&gt; — Seções de conteúdo', tag:'section', items:[
+    {id:'heading', name:'Título H1/H2'},
+    {id:'paragraph', name:'Parágrafo'},
+    {id:'button', name:'Botão / CTA'},
+    {id:'grid', name:'Grade de produtos'},
+    {id:'carousel', name:'Carrossel de cards'},
+    {id:'categories', name:'Categorias (círculos)'},
+    {id:'benefits', name:'Benefícios / Selos'},
+    {id:'pricing', name:'Pricing / Planos'},
+    {id:'stats', name:'Estatísticas / Números'},
+    {id:'stepper', name:'Stepper / Como funciona'},
+    {id:'timeline', name:'Linha do tempo'},
+    {id:'comparison', name:'Tabela comparativa'},
+    {id:'newsletter', name:'Newsletter'},
+    {id:'accordion', name:'Accordion / FAQ'},
+    {id:'cta_banner', name:'Banner com CTA'},
+    {id:'gallery', name:'Galeria de imagens'},
+    {id:'logos', name:'Logos / Parceiros'},
+    {id:'team', name:'Equipe / Time'},
+    {id:'map', name:'Mapa'},
+    {id:'countdown', name:'Contador regressivo'},
+    {id:'filters', name:'Filtros / Chips'},
+    {id:'contact_form', name:'Formulário de contato'},
+    {id:'login_form', name:'Formulário de login'},
+    {id:'divider_el', name:'Divisória'},
+    {id:'spacer', name:'Espaçador'},
+  ]},
+  {cat:'&lt;article&gt; — Artigos e itens', tag:'article', items:[
+    {id:'card', name:'Card de produto'},
+    {id:'blog_card', name:'Card de blog / post'},
+    {id:'image', name:'Imagem (placeholder)'},
+    {id:'video', name:'Vídeo'},
+    {id:'avatar', name:'Avatar / Ícone'},
+    {id:'list', name:'Lista com marcadores'},
+    {id:'checklist', name:'Checklist ✓'},
+    {id:'table', name:'Tabela de dados'},
+    {id:'quote', name:'Depoimento / Quote'},
+    {id:'rating', name:'Avaliação (estrelas)'},
+    {id:'author', name:'Autor / Bio'},
+    {id:'comments', name:'Comentários'},
+    {id:'share', name:'Botões de compartilhar'},
+    {id:'cart', name:'Item de carrinho'},
+    {id:'progress', name:'Barra de progresso'},
+    {id:'badge', name:'Badges / Tags'},
+  ]},
+  {cat:'&lt;aside&gt; — Laterais e flutuantes', tag:'aside', items:[
+    {id:'aside_widget', name:'Widget lateral'},
+    {id:'alert', name:'Banner / Alerta'},
+    {id:'modal', name:'Modal / Popup'},
+    {id:'cookie', name:'Aviso de cookies'},
+    {id:'social', name:'Redes sociais'},
+    {id:'fab', name:'Botão flutuante (WhatsApp)'},
+  ]},
+  {cat:'&lt;footer&gt; — Rodapé', tag:'footer', items:[
+    {id:'footer', name:'Footer com colunas'},
+    {id:'footer_simple', name:'Footer simples'},
+    {id:'payments', name:'Métodos de pagamento'},
+    {id:'app_badges', name:'Badges de app'},
+    {id:'copyright', name:'Copyright'},
+  ]},
+];
+const NAME={}, CATTAG={};
+LIBRARY.forEach(c=>c.items.forEach(it=>{NAME[it.id]=it.name; CATTAG[it.id]=c.tag;}));
+/* elementos altos no preview */
+const TALL = new Set(['hero','hero_split','hero_carousel','hero_video','hero_form','grid','carousel','pricing','footer','gallery','mega_menu','comparison','table','accordion','modal','contact_form','login_form','blog_card','comments']);
+
+const ALIGN_LABEL = {full:'largura total', left:'esquerda', center:'centro', right:'direita'};
+const ALIGN_ICON  = {full:'⛶', left:'⬅', center:'⬌', right:'➡'};
+
+/* ================================================================
+   ESTADO
+   ================================================================ */
+let sections=[]; let activeSection=null; let uid=0; let pvWidth=340;
+const MAX=10;
+const FS_WIDTH=560;
+
+function addSection(){
+  if(sections.length>=MAX){toast('Limite de 10 seções atingido');return;}
+  uid++;
+  sections.push({id:uid,title:'Nova seção',elements:[]});
+  render();
+  requestAnimationFrame(()=>{
+    const cards=document.querySelectorAll('.section-card');
+    const last=cards[cards.length-1];
+    if(last) last.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+}
+function duplicateSection(id){
+  if(sections.length>=MAX){toast('Limite de 10 seções atingido');return;}
+  const i=sections.findIndex(s=>s.id===id);
+  uid++;
+  const cp=JSON.parse(JSON.stringify(sections[i])); cp.id=uid; cp.title+=' (cópia)';
+  sections.splice(i+1,0,cp); render();
+}
+function removeSection(id){ sections=sections.filter(s=>s.id!==id); render(); }
+function moveSection(id,dir){
+  const i=sections.findIndex(s=>s.id===id), j=i+dir;
+  if(j<0||j>=sections.length)return;
+  [sections[i],sections[j]]=[sections[j],sections[i]]; render();
+}
+function updateTitle(id,val){ const s=sections.find(s=>s.id===id); if(s)s.title=val; updatePreview(); }
+function removeElement(secId,idx){ const s=sections.find(s=>s.id===secId); s.elements.splice(idx,1); render(); }
+function moveElement(secId,idx,dir){
+  const s=sections.find(s=>s.id===secId); const j=idx+dir;
+  if(j<0||j>=s.elements.length)return;
+  [s.elements[idx],s.elements[j]]=[s.elements[j],s.elements[idx]]; render();
+}
+function setAlign(secId,idx,val){
+  const s=sections.find(s=>s.id===secId);
+  if(s&&s.elements[idx]){s.elements[idx].align=val; render();}
+}
+function addElement(elId){
+  const s=sections.find(s=>s.id===activeSection);
+  if(s){ s.elements.push({id:elId,align:'full'}); render(); toast(NAME[elId]+' adicionado'); }
+}
+
+/* ================================================================
+   MODAL BIBLIOTECA
+   ================================================================ */
+let activeCat='all';
+function openLib(secId){
+  activeSection=secId; activeCat='all';
+  document.getElementById('libSearch').value='';
+  const s=sections.find(s=>s.id===secId);
+  document.getElementById('modalCtx').textContent='Adicionando em: '+(s.title||'seção');
+  renderCatBar(); renderLib();
+  document.getElementById('overlay').classList.add('open');
+}
+function renderCatBar(){
+  const bar=document.getElementById('catBar');
+  const cats=[{tag:'all',label:'Todos'}].concat(LIBRARY.map(c=>({tag:c.tag,label:c.tag==='hero'?'hero':'&lt;'+c.tag+'&gt;'})));
+  bar.innerHTML=cats.map(c=>
+    `<button class="cat-pill ${activeCat===c.tag?'on':''}" onclick="activeCat='${c.tag}';renderCatBar();renderLib()">${c.label}</button>`
+  ).join('');
+}
+function renderLib(){
+  const q=(document.getElementById('libSearch').value||'').toLowerCase();
+  const grid=document.getElementById('libGrid'); grid.innerHTML='';
+  LIBRARY.forEach(cat=>{
+    if(activeCat!=='all' && cat.tag!==activeCat) return;
+    const items=cat.items.filter(it=>!q || it.name.toLowerCase().includes(q));
+    if(!items.length) return;
+    const lbl=document.createElement('div'); lbl.className='cat-label';
+    lbl.innerHTML=`${cat.cat} <span class="tagx">${items.length}</span>`;
+    grid.appendChild(lbl);
+    const g=document.createElement('div'); g.className='lib-grid';
+    items.forEach(it=>{
+      const el=document.createElement('div'); el.className='lib-item';
+      el.innerHTML=`<div class="preview">${I[it.id]||''}</div><div class="name">${it.name}</div><div class="add-tag">＋ adicionar</div>`;
+      el.onclick=()=>addElement(it.id);
+      g.appendChild(el);
+    });
+    grid.appendChild(g);
+  });
+  if(!grid.children.length) grid.innerHTML='<p style="color:var(--texto-dim);text-align:center;padding:30px">Nenhum componente encontrado.</p>';
+}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
+
+/* ================================================================
+   RENDER PRINCIPAL
+   ================================================================ */
+function render(){
+  const cont=document.getElementById('sections');
+  const empty=document.getElementById('emptyState');
+  cont.innerHTML='';
+  empty.style.display=sections.length?'none':'block';
+  document.getElementById('secCount').textContent=sections.length;
+  document.getElementById('addSecBtn').disabled=sections.length>=MAX;
+
+  sections.forEach((s,i)=>{
+    const num=String(i).padStart(2,'0');
+    const card=document.createElement('div'); card.className='section-card';
+    const chips=s.elements.length
+      ? s.elements.map((e,idx)=>{
+          const alignBtns=['full','left','center','right'].map(a=>
+            `<button class="${e.align===a?'on':''}" title="${ALIGN_LABEL[a]}" onclick="setAlign(${s.id},${idx},'${a}')">${ALIGN_ICON[a]}</button>`
+          ).join('');
+          return `<span class="chip">
+            <span class="thumb">${I[e.id]||''}</span>
+            <span class="chip-label"><b>${NAME[e.id]}</b><small>&lt;${CATTAG[e.id]}&gt; · ${ALIGN_LABEL[e.align]}</small></span>
+            <span class="ctrl">
+              <button title="Mover p/ cima" onclick="moveElement(${s.id},${idx},-1)">↑</button>
+              <button title="Mover p/ baixo" onclick="moveElement(${s.id},${idx},1)">↓</button>
+              <span class="sep"></span>${alignBtns}
+            </span>
+            <span class="chip-x" onclick="removeElement(${s.id},${idx})">✕</span>
+          </span>`;
+        }).join('')
+      : `<span class="empty-chips">Nenhum elemento — clique em "Componentes" para escolher.</span>`;
+    card.innerHTML=`
+      <div class="section-head">
+        <div class="section-num">${num}</div>
+        <input class="section-title-input" value="${s.title.replace(/"/g,'&quot;')}" oninput="updateTitle(${s.id},this.value)">
+        <span class="sec-tag">${s.elements.length} el.</span>
+        <div class="section-actions">
+          <button class="icon-btn" title="Subir" onclick="moveSection(${s.id},-1)">▲</button>
+          <button class="icon-btn" title="Descer" onclick="moveSection(${s.id},1)">▼</button>
+          <button class="icon-btn" title="Duplicar" onclick="duplicateSection(${s.id})">⧉</button>
+          <button class="icon-btn danger" title="Remover" onclick="removeSection(${s.id})">🗑</button>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="chips">${chips}</div>
+        <button class="btn btn-ghost btn-sm" onclick="openLib(${s.id})">＋ Componentes</button>
+      </div>`;
+    cont.appendChild(card);
+  });
+  if(sections.length&&sections.length<MAX){
+    const w=document.createElement('div'); w.className='add-inline';
+    w.innerHTML=`<button onclick="addSection()">＋ Adicionar próxima seção</button>`;
+    cont.appendChild(w);
+  }
+  updatePreview();
+}
+
+/* ================================================================
+   PREVIEW (página wireframe com faixa lateral)
+   ================================================================ */
+function wfMarkup(){
+  if(!sections.length) return `<div class="pv-empty">O preview aparece aqui conforme você adiciona seções e elementos.</div>`;
+  return sections.map((s,i)=>{
+    const num=String(i).padStart(2,'0');
+    const els=s.elements.length
+      ? s.elements.map(e=>{
+          const tall=TALL.has(e.id)?' tall':'';
+          let style='';
+          if(e.align==='left')   style='width:62%;margin-right:auto';
+          if(e.align==='center') style='width:62%;margin-left:auto;margin-right:auto';
+          if(e.align==='right')  style='width:62%;margin-left:auto';
+          return `<div class="wf-el${tall}" style="${style}">${I[e.id]||''}</div>`;
+        }).join('')
+      : `<div class="wf-empty">seção vazia</div>`;
+    return `<div class="wf-sec"><div class="wf-gutter"><span class="n">${num} —</span><span class="t">${(s.title||'seção')}</span></div><div class="wf-content">${els}</div></div>`;
+  }).join('');
+}
+function updatePreview(){
+  document.getElementById('preview').innerHTML=wfMarkup();
+  document.getElementById('preview').style.width=pvWidth+'px';
+  const fs=document.getElementById('fsPreview');
+  if(document.getElementById('fsOverlay').classList.contains('open')) fs.innerHTML=wfMarkup();
+}
+function zoom(d){
+  pvWidth=Math.min(420,Math.max(240,pvWidth+d*40));
+  updatePreview();
+}
+function openFS(){
+  document.getElementById('fsPreview').innerHTML=wfMarkup();
+  document.getElementById('fsOverlay').classList.add('open');
+}
+function closeFS(){document.getElementById('fsOverlay').classList.remove('open');}
+
+/* ================================================================
+   PROMPT
+   ================================================================ */
+function generatePrompt(){
+  if(!sections.length){toast('Adicione ao menos uma seção');return;}
+  let p=`Crie uma imagem de um WIREFRAME de baixa fidelidade (lo-fi), estilo esboço/blueprint.\n\n`;
+  p+=`ESTILO VISUAL (obrigatório):\n`;
+  p+=`- Apenas preto e branco / escala de cinza, fundo branco.\n`;
+  p+=`- Texto = barras pretas (títulos) e linhas finas cinza (parágrafos); nunca texto real.\n`;
+  p+=`- Imagens = retângulos cinza com X diagonal e rótulo central em CAIXA ALTA.\n`;
+  p+=`- Grade alinhada (múltiplos de 8px), traços finos, cantos levemente arredondados.\n`;
+  p+=`- Faixa numerada à esquerda de cada seção (00, 01, 02...) e divisórias horizontais.\n`;
+  p+=`- Layout vertical de página única, limpo, minimalista e profissional.\n\n`;
+  p+=`ESTRUTURA SEMÂNTICA (de cima para baixo, ${sections.length} seçõe${sections.length>1?'s':''}):\n`;
+  sections.forEach((s,i)=>{
+    const num=String(i).padStart(2,'0');
+    const els=s.elements.length
+      ? s.elements.map(e=>{
+          const a=e.align!=='full'?` [alinhado à ${ALIGN_LABEL[e.align]}]`:'';
+          return `${NAME[e.id]} <${CATTAG[e.id]}>${a}`;
+        }).join('; ')
+      : '(definir elementos)';
+    p+=`${num} — ${s.title.toUpperCase()}: ${els}.\n`;
+  });
+  p+=`\nRespeite os alinhamentos indicados. Renderize nítido, como wireframe de aprovação de cliente.`;
+  document.getElementById('promptOut').value=p;
+  toast('Prompt gerado!');
+}
+function copyPrompt(){
+  const t=document.getElementById('promptOut');
+  if(!t.value)generatePrompt();
+  t.select();document.execCommand('copy');
+  navigator.clipboard&&navigator.clipboard.writeText(t.value);
+  toast('Copiado para a área de transferência');
+}
+
+/* ================================================================
+   SALVAR / CARREGAR (localStorage — funciona ao abrir o arquivo localmente)
+   ================================================================ */
+function saveScope(){
+  try{localStorage.setItem('wf-escopo',JSON.stringify({sections,uid}));toast('Escopo salvo neste navegador');}
+  catch(e){toast('Não foi possível salvar aqui');}
+}
+function loadScope(){
+  try{
+    const d=JSON.parse(localStorage.getItem('wf-escopo')||'null');
+    if(!d||!d.sections.length){toast('Nenhum escopo salvo');return;}
+    sections=d.sections;uid=d.uid;render();toast('Escopo carregado');
+  }catch(e){toast('Não foi possível carregar');}
+}
+function clearAll(){
+  if(!sections.length)return;
+  sections=[];uid=0;render();
+  document.getElementById('promptOut').value='';
+  toast('Escopo limpo');
+}
+
+/* ================================================================
+   TOAST + atalhos
+   ================================================================ */
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal();closeFS();}
+});
+
+/* início */
+addSection();
+</script>
+</body>
+</html>
