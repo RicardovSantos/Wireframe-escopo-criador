@@ -223,6 +223,23 @@
   .lib-item .name{font-size:.8rem;font-weight:600;line-height:1.25}
   .lib-item .add-tag{font-size:.66rem;color:var(--azul-cl);margin-top:4px;font-weight:700}
 
+  /* ============ MODELOS PRONTOS ============ */
+  .btn-tpl{background:var(--grad-soft);color:var(--texto);border:1px solid rgba(151,117,250,.45)}
+  .btn-tpl:hover{border-color:var(--roxo-cl);background:rgba(151,117,250,.16)}
+  .tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:14px}
+  .tpl-card{background:var(--bg);border:1px solid var(--linha);border-radius:14px;overflow:hidden;cursor:pointer;transition:.16s;display:flex;flex-direction:column}
+  .tpl-card:hover{border-color:var(--roxo-cl);transform:translateY(-2px);box-shadow:0 10px 26px rgba(112,72,232,.3)}
+  .tpl-card .tpl-thumb{background:#fff;border-bottom:1px solid var(--linha);height:200px;overflow:hidden;position:relative}
+  .tpl-card .tpl-thumb img{width:100%;display:block;object-fit:cover;object-position:top}
+  .tpl-card .tpl-thumb .tpl-loading{position:absolute;inset:0;display:grid;place-items:center;color:#c5cad1;font-size:.7rem}
+  .tpl-card .tpl-info{padding:11px 13px 13px}
+  .tpl-card .tpl-emoji{font-size:1.05rem}
+  .tpl-card .tpl-name{font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:7px}
+  .tpl-card .tpl-desc{font-size:.7rem;color:var(--texto-dim);margin-top:4px;line-height:1.35}
+  .tpl-card .tpl-meta{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+  .tpl-card .tpl-count{font-size:.62rem;font-weight:800;letter-spacing:.5px;color:var(--roxo-cl);background:rgba(151,117,250,.12);border:1px solid rgba(151,117,250,.3);padding:3px 8px;border-radius:20px;text-transform:uppercase}
+  .tpl-card .tpl-use{font-size:.72rem;color:var(--roxo-cl);font-weight:700}
+
   /* ============ PREVIEW ============ */
   .pv-panel{background:var(--bg2);border:1px solid var(--linha);border-radius:var(--radius);overflow:hidden}
   .pv-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--linha);background:var(--grad-soft)}
@@ -288,9 +305,10 @@
   <div class="main">
     <div class="toolbar">
       <h2>Seções do escopo</h2>
-      <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
         <span class="count-badge"><b id="secCount">0</b> / 10 seções</span>
-        <button class="btn btn-primary" id="addSecBtn" onclick="addSection()">＋ Adicionar seção</button>
+        <button class="btn btn-tpl" onclick="openTemplates()">✨ <span class="lbl">Modelos prontos</span></button>
+        <button class="btn btn-primary" id="addSecBtn" onclick="addSection()">＋ <span class="lbl">Adicionar seção</span></button>
       </div>
     </div>
     <div id="sections"></div>
@@ -352,6 +370,18 @@
     </div>
     <div class="cat-bar" id="catBar"></div>
     <div class="modal-body" id="libGrid"></div>
+  </div>
+</div>
+
+<!-- MODELOS PRONTOS -->
+<div class="overlay" id="tplOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3>✨ Escolher um modelo pronto</h3><small>Selecione um ponto de partida — depois edite e exporte como quiser.</small></div>
+      <button class="icon-btn" onclick="closeTemplates()">✕</button>
+    </div>
+    <div class="cat-bar" id="tplCatBar"></div>
+    <div class="modal-body" id="tplGrid"></div>
   </div>
 </div>
 
@@ -502,6 +532,28 @@ feature_tabs:`<svg viewBox="0 0 200 120"><rect x="20" y="10" width="44" height="
 pricing_toggle:`<svg viewBox="0 0 200 140"><rect x="74" y="8" width="52" height="16" rx="8" fill="#fff" stroke="#1a1d21"/><circle cx="116" cy="16" r="6" fill="#1a1d21"/><text x="60" y="20" font-size="7" fill="#8b929b" text-anchor="end" font-family="Arial">mensal</text><text x="140" y="20" font-size="7" fill="#1a1d21" font-family="Arial">anual</text><rect x="20" y="34" width="74" height="98" rx="5" fill="#fff" stroke="#1a1d21"/><line x1="30" y1="48" x2="62" y2="48" stroke="#1a1d21" stroke-width="2"/><text x="57" y="72" font-size="14" font-weight="bold" fill="#1a1d21" text-anchor="middle" font-family="Arial">R$49</text><line x1="30" y1="86" x2="84" y2="86" stroke="#8b929b"/><line x1="30" y1="96" x2="84" y2="96" stroke="#8b929b"/><rect x="30" y="110" width="54" height="14" rx="3" fill="#fff" stroke="#1a1d21"/><rect x="106" y="34" width="74" height="98" rx="5" fill="#fff" stroke="#1a1d21" stroke-width="2"/><line x1="116" y1="48" x2="148" y2="48" stroke="#1a1d21" stroke-width="2"/><text x="143" y="72" font-size="14" font-weight="bold" fill="#1a1d21" text-anchor="middle" font-family="Arial">R$99</text><line x1="116" y1="86" x2="170" y2="86" stroke="#8b929b"/><line x1="116" y1="96" x2="170" y2="96" stroke="#8b929b"/><rect x="116" y="110" width="54" height="14" rx="3" fill="#1a1d21"/></svg>`,
 cta_split:`<svg viewBox="0 0 200 100"><rect x="8" y="10" width="184" height="80" rx="5" fill="#fff" stroke="#1a1d21"/><line x1="100" y1="10" x2="100" y2="90" stroke="#1a1d21"/><line x1="20" y1="32" x2="86" y2="32" stroke="#1a1d21" stroke-width="3"/><line x1="20" y1="48" x2="86" y2="48" stroke="#8b929b"/><line x1="20" y1="58" x2="70" y2="58" stroke="#8b929b"/><rect x="20" y="68" width="48" height="14" rx="3" fill="#1a1d21"/><rect x="100" y="10" width="92" height="80" fill="#eef1f4"/><path d="M100 10 L192 90 M192 10 L100 90" stroke="#d4d9df"/></svg>`,
 trust_bar:`<svg viewBox="0 0 200 50"><path d="M30 14 l8 4 0 8 q0 8 -8 12 q-8 -4 -8 -12 l0 -8 z" fill="#eef1f4" stroke="#1a1d21"/><path d="M27 24 l2.5 3 5 -6" fill="none" stroke="#1a1d21" stroke-width="1.3"/><line x1="48" y1="22" x2="78" y2="22" stroke="#4a5159"/><line x1="48" y1="30" x2="70" y2="30" stroke="#c5cad1"/><rect x="100" y="16" width="20" height="16" rx="2" fill="#eef1f4" stroke="#1a1d21"/><path d="M104 16 v-3 a6 6 0 0 1 12 0 v3" fill="none" stroke="#1a1d21"/><line x1="128" y1="22" x2="158" y2="22" stroke="#4a5159"/><line x1="128" y1="30" x2="150" y2="30" stroke="#c5cad1"/></svg>`,
+/* ============ NEW · E-COMMERCE (semijoias/acessórios) ============ */
+freebar:`<svg viewBox="0 0 200 40"><path d="M14 8 h12 v9 h-12 z M26 11 h6 l4 4 v2 h-10 z" fill="none" stroke="#1a1d21" stroke-width="1.1"/><circle cx="19" cy="20" r="2.4" fill="none" stroke="#1a1d21"/><circle cx="33" cy="20" r="2.4" fill="none" stroke="#1a1d21"/><text x="46" y="14" font-size="7.5" fill="#4a5159" font-family="Arial">Faltam <tspan font-weight="bold" fill="#1a1d21">R$39</tspan> para o FRETE GRÁTIS</text><rect x="14" y="24" width="174" height="8" rx="4" fill="#eef1f4" stroke="#c5cad1"/><rect x="14" y="24" width="120" height="8" rx="4" fill="#1a1d21"/></svg>`,
+benefit_strip:`<svg viewBox="0 0 200 58"><g stroke="#1a1d21" fill="none" stroke-width="1.1"><path d="M16 14 h13 v9 h-13 z M29 17 h6 l4 3 v3 h-10 z"/><circle cx="21" cy="25" r="2"/><circle cx="34" cy="25" r="2"/></g><line x1="12" y1="36" x2="42" y2="36" stroke="#4a5159"/><line x1="16" y1="44" x2="38" y2="44" stroke="#c5cad1"/><g stroke="#1a1d21" fill="none" stroke-width="1.1"><rect x="66" y="15" width="20" height="13" rx="2"/><line x1="66" y1="20" x2="86" y2="20"/></g><line x1="62" y1="36" x2="92" y2="36" stroke="#4a5159"/><line x1="66" y1="44" x2="88" y2="44" stroke="#c5cad1"/><g stroke="#1a1d21" fill="none" stroke-width="1.1"><path d="M114 16 a9 9 0 1 0 9 9"/><path d="M123 16 v6 h-6"/></g><line x1="112" y1="36" x2="142" y2="36" stroke="#4a5159"/><line x1="116" y1="44" x2="138" y2="44" stroke="#c5cad1"/><g stroke="#1a1d21" fill="none" stroke-width="1.1"><path d="M168 14 l9 3 0 7 q0 7 -9 11 q-9 -4 -9 -11 l0 -7 z"/><path d="M164 24 l3 3 6 -7"/></g><line x1="162" y1="36" x2="192" y2="36" stroke="#4a5159"/><line x1="166" y1="44" x2="188" y2="44" stroke="#c5cad1"/></svg>`,
+banner_duplo:`<svg viewBox="0 0 200 90"><rect x="8" y="8" width="88" height="74" rx="4" fill="#eef1f4" stroke="#1a1d21"/><path d="M8 8 L96 82 M96 8 L8 82" stroke="#d4d9df"/><line x1="18" y1="50" x2="68" y2="50" stroke="#1a1d21" stroke-width="2.5"/><rect x="18" y="60" width="40" height="12" rx="3" fill="#1a1d21"/><rect x="104" y="8" width="88" height="74" rx="4" fill="#eef1f4" stroke="#1a1d21"/><path d="M104 8 L192 82 M192 8 L104 82" stroke="#d4d9df"/><line x1="114" y1="50" x2="164" y2="50" stroke="#1a1d21" stroke-width="2.5"/><rect x="114" y="60" width="40" height="12" rx="3" fill="#1a1d21"/></svg>`,
+collection_banner:`<svg viewBox="0 0 200 110"><rect x="8" y="8" width="184" height="94" rx="4" fill="#eef1f4" stroke="#1a1d21"/><path d="M8 8 L192 102 M192 8 L8 102" stroke="#d4d9df"/><rect x="24" y="34" width="60" height="9" rx="4" fill="#fff" stroke="#c5cad1"/><line x1="24" y1="56" x2="120" y2="56" stroke="#1a1d21" stroke-width="3.5"/><line x1="24" y1="68" x2="96" y2="68" stroke="#1a1d21" stroke-width="3.5"/><rect x="24" y="80" width="52" height="16" rx="3" fill="#1a1d21"/></svg>`,
+product_tabs:`<svg viewBox="0 0 200 150"><text x="12" y="15" font-size="8" font-weight="bold" fill="#1a1d21" font-family="Arial">Novidades</text><line x1="12" y1="21" x2="56" y2="21" stroke="#1a1d21" stroke-width="2"/><text x="68" y="15" font-size="8" fill="#8b929b" font-family="Arial">Mais vendidos</text><text x="140" y="15" font-size="8" fill="#8b929b" font-family="Arial">Ofertas</text><g><rect x="8" y="30" width="40" height="110" rx="3" fill="#fff" stroke="#1a1d21"/><rect x="13" y="35" width="30" height="40" fill="#eef1f4" stroke="#c5cad1"/><path d="M13 35 L43 75 M43 35 L13 75" stroke="#d4d9df"/><line x1="13" y1="84" x2="40" y2="84" stroke="#4a5159" stroke-width="1.5"/><text x="13" y="100" font-size="7" font-weight="bold" fill="#1a1d21" font-family="Arial">R$79</text><rect x="13" y="120" width="30" height="12" rx="2" fill="#1a1d21"/></g><g><rect x="56" y="30" width="40" height="110" rx="3" fill="#fff" stroke="#1a1d21"/><rect x="61" y="35" width="30" height="40" fill="#eef1f4" stroke="#c5cad1"/><path d="M61 35 L91 75 M91 35 L61 75" stroke="#d4d9df"/><line x1="61" y1="84" x2="88" y2="84" stroke="#4a5159" stroke-width="1.5"/><text x="61" y="100" font-size="7" font-weight="bold" fill="#1a1d21" font-family="Arial">R$79</text><rect x="61" y="120" width="30" height="12" rx="2" fill="#1a1d21"/></g><g><rect x="104" y="30" width="40" height="110" rx="3" fill="#fff" stroke="#1a1d21"/><rect x="109" y="35" width="30" height="40" fill="#eef1f4" stroke="#c5cad1"/><path d="M109 35 L139 75 M139 35 L109 75" stroke="#d4d9df"/><line x1="109" y1="84" x2="136" y2="84" stroke="#4a5159" stroke-width="1.5"/><text x="109" y="100" font-size="7" font-weight="bold" fill="#1a1d21" font-family="Arial">R$79</text><rect x="109" y="120" width="30" height="12" rx="2" fill="#1a1d21"/></g><g><rect x="152" y="30" width="40" height="110" rx="3" fill="#fff" stroke="#1a1d21"/><rect x="157" y="35" width="30" height="40" fill="#eef1f4" stroke="#c5cad1"/><path d="M157 35 L187 75 M187 35 L157 75" stroke="#d4d9df"/><line x1="157" y1="84" x2="184" y2="84" stroke="#4a5159" stroke-width="1.5"/><text x="157" y="100" font-size="7" font-weight="bold" fill="#1a1d21" font-family="Arial">R$79</text><rect x="157" y="120" width="30" height="12" rx="2" fill="#1a1d21"/></g></svg>`,
+insta_feed:`<svg viewBox="0 0 200 110"><circle cx="18" cy="14" r="7" fill="#eef1f4" stroke="#1a1d21"/><text x="32" y="17" font-size="8" font-weight="bold" fill="#1a1d21" font-family="Arial">@sualoja</text><rect x="150" y="8" width="40" height="13" rx="6" fill="#fff" stroke="#1a1d21"/><text x="170" y="17" font-size="6" fill="#1a1d21" text-anchor="middle" font-family="Arial">Seguir</text><g><rect x="8" y="30" width="28" height="72" fill="#eef1f4" stroke="#1a1d21"/><path d="M8 30 L36 102 M36 30 L8 102" stroke="#d4d9df"/></g><g><rect x="39" y="30" width="28" height="72" fill="#eef1f4" stroke="#1a1d21"/><path d="M39 30 L67 102 M67 30 L39 102" stroke="#d4d9df"/></g><g><rect x="70" y="30" width="28" height="72" fill="#eef1f4" stroke="#1a1d21"/><path d="M70 30 L98 102 M98 30 L70 102" stroke="#d4d9df"/></g><g><rect x="101" y="30" width="28" height="72" fill="#eef1f4" stroke="#1a1d21"/><path d="M101 30 L129 102 M129 30 L101 102" stroke="#d4d9df"/></g><g><rect x="132" y="30" width="28" height="72" fill="#eef1f4" stroke="#1a1d21"/><path d="M132 30 L160 102 M160 30 L132 102" stroke="#d4d9df"/></g><g><rect x="163" y="30" width="29" height="72" fill="#eef1f4" stroke="#1a1d21"/><path d="M163 30 L192 102 M192 30 L163 102" stroke="#d4d9df"/></g></svg>`,
+coupon_bar:`<svg viewBox="0 0 200 44"><rect x="20" y="12" width="160" height="22" rx="4" fill="#fff" stroke="#1a1d21" stroke-dasharray="4,3"/><circle cx="20" cy="23" r="4" fill="#fff" stroke="#1a1d21"/><circle cx="180" cy="23" r="4" fill="#fff" stroke="#1a1d21"/><text x="30" y="26" font-size="7.5" fill="#4a5159" font-family="Arial">Cupom</text><text x="62" y="26" font-size="9" font-weight="bold" fill="#1a1d21" font-family="Arial" letter-spacing="1">BEMVINDA10</text><rect x="138" y="16" width="36" height="14" rx="3" fill="#1a1d21"/><text x="156" y="26" font-size="6.5" fill="#fff" text-anchor="middle" font-family="Arial">COPIAR</text></svg>`,
+/* ============ NEW · SERVIÇOS / AGENDAMENTO (salão, estética, barbearia) ============ */
+services_price:`<svg viewBox="0 0 200 120"><line x1="12" y1="16" x2="70" y2="16" stroke="#1a1d21" stroke-width="2"/><line x1="12" y1="25" x2="50" y2="25" stroke="#c5cad1"/><line x1="78" y1="20" x2="158" y2="20" stroke="#e4e6ea" stroke-dasharray="2,2"/><text x="188" y="20" font-size="9" font-weight="bold" fill="#1a1d21" text-anchor="end" font-family="Arial">R$ 80</text><line x1="12" y1="38" x2="188" y2="38" stroke="#e4e6ea"/><line x1="12" y1="48" x2="70" y2="48" stroke="#1a1d21" stroke-width="2"/><line x1="12" y1="57" x2="46" y2="57" stroke="#c5cad1"/><line x1="78" y1="52" x2="158" y2="52" stroke="#e4e6ea" stroke-dasharray="2,2"/><text x="188" y="52" font-size="9" font-weight="bold" fill="#1a1d21" text-anchor="end" font-family="Arial">R$ 120</text><line x1="12" y1="70" x2="188" y2="70" stroke="#e4e6ea"/><line x1="12" y1="80" x2="70" y2="80" stroke="#1a1d21" stroke-width="2"/><line x1="12" y1="89" x2="52" y2="89" stroke="#c5cad1"/><line x1="78" y1="84" x2="158" y2="84" stroke="#e4e6ea" stroke-dasharray="2,2"/><text x="188" y="84" font-size="9" font-weight="bold" fill="#1a1d21" text-anchor="end" font-family="Arial">R$ 60</text><line x1="12" y1="102" x2="188" y2="102" stroke="#e4e6ea"/><line x1="12" y1="112" x2="70" y2="112" stroke="#1a1d21" stroke-width="2"/><text x="188" y="112" font-size="9" font-weight="bold" fill="#1a1d21" text-anchor="end" font-family="Arial">R$ 95</text></svg>`,
+before_after:`<svg viewBox="0 0 200 120"><rect x="8" y="10" width="184" height="100" rx="4" fill="#eef1f4" stroke="#1a1d21"/><path d="M8 10 L100 110" stroke="#d4d9df"/><path d="M100 10 L8 110" stroke="#d4d9df"/><path d="M108 10 L192 86" stroke="#d4d9df"/><path d="M192 10 L108 110" stroke="#d4d9df"/><line x1="100" y1="10" x2="100" y2="110" stroke="#1a1d21" stroke-width="1.6"/><circle cx="100" cy="60" r="10" fill="#fff" stroke="#1a1d21"/><path d="M97 55 l-4 5 4 5 M103 55 l4 5 -4 5" stroke="#1a1d21" fill="none"/><rect x="16" y="16" width="42" height="13" rx="2" fill="#fff" stroke="#c5cad1"/><text x="37" y="26" font-size="7" fill="#4a5159" text-anchor="middle" font-family="Arial">ANTES</text><rect x="118" y="16" width="50" height="13" rx="2" fill="#1a1d21"/><text x="143" y="26" font-size="7" fill="#fff" text-anchor="middle" font-family="Arial">DEPOIS</text></svg>`,
+booking_form:`<svg viewBox="0 0 200 140"><rect x="30" y="8" width="140" height="124" rx="5" fill="#fff" stroke="#1a1d21"/><line x1="42" y1="20" x2="104" y2="20" stroke="#1a1d21" stroke-width="2"/><line x1="42" y1="32" x2="78" y2="32" stroke="#8b929b"/><rect x="42" y="36" width="116" height="14" rx="2" fill="#fff" stroke="#c5cad1"/><path d="M148 41 l4 4 4 -4" stroke="#8b929b" fill="none"/><line x1="42" y1="58" x2="70" y2="58" stroke="#8b929b"/><rect x="42" y="62" width="116" height="14" rx="2" fill="#fff" stroke="#c5cad1"/><rect x="146" y="64" width="10" height="10" rx="1" fill="none" stroke="#8b929b"/><line x1="42" y1="84" x2="70" y2="84" stroke="#8b929b"/><rect x="42" y="88" width="26" height="14" rx="3" fill="#1a1d21"/><rect x="72" y="88" width="26" height="14" rx="3" fill="#fff" stroke="#c5cad1"/><rect x="102" y="88" width="26" height="14" rx="3" fill="#fff" stroke="#c5cad1"/><rect x="132" y="88" width="26" height="14" rx="3" fill="#fff" stroke="#c5cad1"/><rect x="42" y="108" width="116" height="18" rx="3" fill="#1a1d21"/><text x="100" y="120" font-size="7" fill="#fff" text-anchor="middle" font-family="Arial">AGENDAR HORÁRIO</text></svg>`,
+schedule_cta:`<svg viewBox="0 0 200 70"><rect x=".5" y=".5" width="199" height="69" fill="#1a1d21"/><line x1="16" y1="26" x2="110" y2="26" stroke="#fff" stroke-width="3"/><line x1="16" y1="42" x2="80" y2="42" stroke="#8b929b"/><rect x="124" y="23" width="60" height="24" rx="12" fill="#fff"/><circle cx="140" cy="35" r="7" fill="none" stroke="#1a1d21"/><path d="M137 35 a3 3 0 0 0 6 0" fill="none" stroke="#1a1d21"/><text x="152" y="38" font-size="7" fill="#1a1d21" font-family="Arial">Agendar</text></svg>`,
+hours_location:`<svg viewBox="0 0 200 120"><rect x="8" y="10" width="86" height="100" rx="4" fill="#fff" stroke="#1a1d21"/><circle cx="22" cy="26" r="7" fill="none" stroke="#1a1d21"/><path d="M22 22 v4 l3 2" stroke="#1a1d21" fill="none"/><line x1="34" y1="27" x2="84" y2="27" stroke="#1a1d21" stroke-width="2"/><line x1="18" y1="46" x2="48" y2="46" stroke="#4a5159"/><line x1="58" y1="46" x2="84" y2="46" stroke="#8b929b"/><line x1="18" y1="60" x2="48" y2="60" stroke="#4a5159"/><line x1="58" y1="60" x2="84" y2="60" stroke="#8b929b"/><line x1="18" y1="74" x2="48" y2="74" stroke="#4a5159"/><line x1="58" y1="74" x2="84" y2="74" stroke="#8b929b"/><line x1="18" y1="92" x2="72" y2="92" stroke="#8b929b"/><rect x="104" y="10" width="88" height="100" rx="4" fill="#eef1f4" stroke="#1a1d21"/><path d="M118 100 Q140 60 160 74 T188 50" stroke="#c5cad1" fill="none"/><path d="M148 42 a10 10 0 1 1 0 .01 M148 54 l-6 12 12 0 z" fill="#fff" stroke="#1a1d21"/><circle cx="148" cy="48" r="3.5" fill="#1a1d21"/></svg>`,
+staff_card:`<svg viewBox="0 0 200 120"><g><rect x="8" y="10" width="56" height="100" rx="4" fill="#fff" stroke="#1a1d21"/><rect x="8" y="10" width="56" height="50" rx="4" fill="#eef1f4" stroke="#c5cad1"/><circle cx="36" cy="30" r="9" fill="none" stroke="#8b929b"/><path d="M27 47 q9 -10 18 0" fill="none" stroke="#8b929b"/><line x1="16" y1="72" x2="56" y2="72" stroke="#1a1d21" stroke-width="2"/><line x1="16" y1="82" x2="48" y2="82" stroke="#8b929b"/><circle cx="24" cy="96" r="3.5" fill="none" stroke="#1a1d21"/><circle cx="36" cy="96" r="3.5" fill="none" stroke="#1a1d21"/></g><g><rect x="72" y="10" width="56" height="100" rx="4" fill="#fff" stroke="#1a1d21"/><rect x="72" y="10" width="56" height="50" rx="4" fill="#eef1f4" stroke="#c5cad1"/><circle cx="100" cy="30" r="9" fill="none" stroke="#8b929b"/><path d="M91 47 q9 -10 18 0" fill="none" stroke="#8b929b"/><line x1="80" y1="72" x2="120" y2="72" stroke="#1a1d21" stroke-width="2"/><line x1="80" y1="82" x2="112" y2="82" stroke="#8b929b"/><circle cx="88" cy="96" r="3.5" fill="none" stroke="#1a1d21"/><circle cx="100" cy="96" r="3.5" fill="none" stroke="#1a1d21"/></g><g><rect x="136" y="10" width="56" height="100" rx="4" fill="#fff" stroke="#1a1d21"/><rect x="136" y="10" width="56" height="50" rx="4" fill="#eef1f4" stroke="#c5cad1"/><circle cx="164" cy="30" r="9" fill="none" stroke="#8b929b"/><path d="M155 47 q9 -10 18 0" fill="none" stroke="#8b929b"/><line x1="144" y1="72" x2="184" y2="72" stroke="#1a1d21" stroke-width="2"/><line x1="144" y1="82" x2="176" y2="82" stroke="#8b929b"/><circle cx="152" cy="96" r="3.5" fill="none" stroke="#1a1d21"/><circle cx="164" cy="96" r="3.5" fill="none" stroke="#1a1d21"/></g></svg>`,
+/* ============ NEW · SAÚDE (clínicas) ============ */
+specialties:`<svg viewBox="0 0 200 110"><g><rect x="8" y="10" width="58" height="44" rx="4" fill="#fff" stroke="#1a1d21"/><path d="M37 22 v12 M31 28 h12" stroke="#1a1d21" stroke-width="1.6"/><line x1="18" y1="46" x2="56" y2="46" stroke="#8b929b"/></g><g><rect x="72" y="10" width="58" height="44" rx="4" fill="#fff" stroke="#1a1d21"/><path d="M101 33 l-6 -6 a4 4 0 0 1 6 -6 a4 4 0 0 1 6 6 z" fill="none" stroke="#1a1d21"/><line x1="82" y1="46" x2="120" y2="46" stroke="#8b929b"/></g><g><rect x="136" y="10" width="56" height="44" rx="4" fill="#fff" stroke="#1a1d21"/><circle cx="164" cy="26" r="7" fill="none" stroke="#1a1d21"/><path d="M160 26 l3 3 5 -6" stroke="#1a1d21" fill="none"/><line x1="146" y1="46" x2="182" y2="46" stroke="#8b929b"/></g><g><rect x="8" y="60" width="58" height="44" rx="4" fill="#fff" stroke="#1a1d21"/><path d="M37 70 a6 6 0 1 0 0 12 a6 6 0 1 0 0 -12 M30 86 h14" stroke="#1a1d21" fill="none"/><line x1="18" y1="96" x2="56" y2="96" stroke="#8b929b"/></g><g><rect x="72" y="60" width="58" height="44" rx="4" fill="#fff" stroke="#1a1d21"/><path d="M94 74 h12 v10 h-12 z M98 74 v-3 h4 v3" fill="none" stroke="#1a1d21"/><line x1="82" y1="96" x2="120" y2="96" stroke="#8b929b"/></g><g><rect x="136" y="60" width="56" height="44" rx="4" fill="#fff" stroke="#1a1d21"/><path d="M158 70 l8 4 0 6 q0 6 -8 9 q-8 -3 -8 -9 l0 -6 z" fill="none" stroke="#1a1d21"/><line x1="146" y1="96" x2="182" y2="96" stroke="#8b929b"/></g></svg>`,
+/* ============ NEW · IMÓVEIS (corretoras) ============ */
+property_search:`<svg viewBox="0 0 200 90"><line x1="40" y1="22" x2="160" y2="22" stroke="#1a1d21" stroke-width="3"/><line x1="62" y1="34" x2="138" y2="34" stroke="#8b929b"/><rect x="12" y="48" width="176" height="30" rx="6" fill="#fff" stroke="#1a1d21"/><rect x="20" y="56" width="42" height="14" rx="3" fill="#fff" stroke="#c5cad1"/><line x1="25" y1="63" x2="50" y2="63" stroke="#c5cad1"/><rect x="68" y="56" width="46" height="14" rx="3" fill="#fff" stroke="#c5cad1"/><line x1="73" y1="63" x2="102" y2="63" stroke="#c5cad1"/><rect x="120" y="56" width="36" height="14" rx="3" fill="#fff" stroke="#c5cad1"/><line x1="125" y1="63" x2="146" y2="63" stroke="#c5cad1"/><rect x="160" y="55" width="22" height="16" rx="3" fill="#1a1d21"/><circle cx="169" cy="62" r="3.5" fill="none" stroke="#fff"/><line x1="172" y1="65" x2="175" y2="68" stroke="#fff"/></svg>`,
+property_card:`<svg viewBox="0 0 200 130"><rect x="40" y="8" width="120" height="114" rx="5" fill="#fff" stroke="#1a1d21"/><rect x="46" y="14" width="108" height="56" fill="#eef1f4" stroke="#c5cad1"/><path d="M46 14 L154 70 M154 14 L46 70" stroke="#d4d9df"/><rect x="52" y="20" width="32" height="12" rx="2" fill="#1a1d21"/><text x="68" y="29" font-size="6.5" fill="#fff" text-anchor="middle" font-family="Arial">VENDA</text><text x="48" y="88" font-size="11" font-weight="bold" fill="#1a1d21" font-family="Arial">R$ 450.000</text><line x1="48" y1="96" x2="120" y2="96" stroke="#8b929b"/><g stroke="#4a5159" fill="none" stroke-width="1.1"><path d="M48 106 h12 v5 h-12 z M48 109 v4 M60 109 v4"/></g><line x1="64" y1="110" x2="78" y2="110" stroke="#8b929b"/><g stroke="#4a5159" fill="none" stroke-width="1.1"><path d="M96 105 v5 h10 v-5 M94 110 h14 l-2 4 h-10 z"/></g><line x1="112" y1="110" x2="124" y2="110" stroke="#8b929b"/><g stroke="#4a5159" fill="none" stroke-width="1.1"><path d="M140 105 h10 v10 h-10 z M140 105 l10 10"/></g><line x1="154" y1="110" x2="160" y2="110" stroke="#8b929b"/></svg>`,
+property_grid:`<svg viewBox="0 0 200 140"><g><rect x="8" y="10" width="58" height="120" rx="4" fill="#fff" stroke="#1a1d21"/><rect x="13" y="15" width="48" height="44" fill="#eef1f4" stroke="#c5cad1"/><path d="M13 15 L61 59 M61 15 L13 59" stroke="#d4d9df"/><text x="13" y="76" font-size="8" font-weight="bold" fill="#1a1d21" font-family="Arial">R$320k</text><line x1="13" y1="86" x2="56" y2="86" stroke="#8b929b"/><g stroke="#8b929b" fill="none"><rect x="13" y="98" width="8" height="5"/><rect x="30" y="98" width="8" height="5"/><rect x="47" y="98" width="8" height="5"/></g></g><g><rect x="72" y="10" width="58" height="120" rx="4" fill="#fff" stroke="#1a1d21"/><rect x="77" y="15" width="48" height="44" fill="#eef1f4" stroke="#c5cad1"/><path d="M77 15 L125 59 M125 15 L77 59" stroke="#d4d9df"/><text x="77" y="76" font-size="8" font-weight="bold" fill="#1a1d21" font-family="Arial">R$480k</text><line x1="77" y1="86" x2="120" y2="86" stroke="#8b929b"/><g stroke="#8b929b" fill="none"><rect x="77" y="98" width="8" height="5"/><rect x="94" y="98" width="8" height="5"/><rect x="111" y="98" width="8" height="5"/></g></g><g><rect x="136" y="10" width="56" height="120" rx="4" fill="#fff" stroke="#1a1d21"/><rect x="141" y="15" width="46" height="44" fill="#eef1f4" stroke="#c5cad1"/><path d="M141 15 L187 59 M187 15 L141 59" stroke="#d4d9df"/><text x="141" y="76" font-size="8" font-weight="bold" fill="#1a1d21" font-family="Arial">R$610k</text><line x1="141" y1="86" x2="182" y2="86" stroke="#8b929b"/><g stroke="#8b929b" fill="none"><rect x="141" y="98" width="8" height="5"/><rect x="158" y="98" width="8" height="5"/><rect x="175" y="98" width="8" height="5"/></g></g></svg>`,
+finance_cta:`<svg viewBox="0 0 200 80"><rect x="8" y="10" width="184" height="60" rx="5" fill="#f7f8fa" stroke="#1a1d21"/><rect x="20" y="22" width="28" height="36" rx="3" fill="#fff" stroke="#1a1d21"/><rect x="24" y="26" width="20" height="8" rx="1" fill="#eef1f4" stroke="#c5cad1"/><g fill="#1a1d21"><rect x="24" y="38" width="4" height="4" rx="1"/><rect x="32" y="38" width="4" height="4" rx="1"/><rect x="40" y="38" width="4" height="4" rx="1"/><rect x="24" y="46" width="4" height="4" rx="1"/><rect x="32" y="46" width="4" height="4" rx="1"/><rect x="40" y="46" width="4" height="4" rx="1"/></g><line x1="60" y1="30" x2="150" y2="30" stroke="#1a1d21" stroke-width="2.5"/><line x1="60" y1="44" x2="140" y2="44" stroke="#8b929b"/><rect x="60" y="52" width="54" height="14" rx="3" fill="#1a1d21"/><text x="87" y="62" font-size="6.5" fill="#fff" text-anchor="middle" font-family="Arial">SIMULAR</text></svg>`,
 };
 
 /* ================================================================
@@ -587,15 +639,37 @@ const LIBRARY = [
     {id:'spacer', name:'Espaçador'},
   ]},
   {cat:'E-commerce — Loja e checkout', tag:'shop', items:[
+    {id:'freebar', name:'Barra de frete grátis (progresso)'},
+    {id:'benefit_strip', name:'Tarja de benefícios (4 selos)'},
+    {id:'coupon_bar', name:'Cupom de desconto'},
+    {id:'collection_banner', name:'Banner de coleção'},
+    {id:'banner_duplo', name:'Banner duplo (promo)'},
+    {id:'product_tabs', name:'Vitrine com abas'},
     {id:'grid', name:'Vitrine de produtos'},
     {id:'filter_sidebar', name:'Filtros + grade de produtos'},
     {id:'product_detail', name:'Página de produto (PDP)'},
     {id:'variant_picker', name:'Seletor de cor / tamanho'},
     {id:'reviews', name:'Avaliações + distribuição'},
+    {id:'insta_feed', name:'Feed do Instagram (@loja)'},
     {id:'cart', name:'Item de carrinho'},
     {id:'mini_cart', name:'Mini-carrinho (gaveta)'},
     {id:'order_summary', name:'Resumo do pedido'},
     {id:'checkout_box', name:'Caixa de preço + pagamento'},
+  ]},
+  {cat:'Serviços & Agendamento — salão, estética, barbearia, clínica', tag:'service', items:[
+    {id:'services_price', name:'Menu de serviços com preço'},
+    {id:'booking_form', name:'Formulário de agendamento'},
+    {id:'schedule_cta', name:'Faixa "Agende pelo WhatsApp"'},
+    {id:'before_after', name:'Antes & depois'},
+    {id:'staff_card', name:'Equipe / profissionais'},
+    {id:'specialties', name:'Especialidades (saúde)'},
+    {id:'hours_location', name:'Horário + localização'},
+  ]},
+  {cat:'Imóveis — corretoras', tag:'realestate', items:[
+    {id:'property_search', name:'Busca de imóveis (hero)'},
+    {id:'property_card', name:'Card de imóvel'},
+    {id:'property_grid', name:'Grade de imóveis'},
+    {id:'finance_cta', name:'Simulação de financiamento'},
   ]},
   {cat:'Dashboard / App — Painéis e mobile', tag:'app', items:[
     {id:'dash_layout', name:'Layout de painel (shell)'},
@@ -725,7 +799,7 @@ function openLib(secId){
 }
 function renderCatBar(){
   const bar=document.getElementById('catBar');
-  const friendly={hero:'hero',shop:'e-commerce',app:'dashboard / app'};
+  const friendly={hero:'hero',shop:'e-commerce',service:'serviços',realestate:'imóveis',app:'dashboard / app'};
   const cats=[{tag:'all',label:'Todos'}].concat(LIBRARY.map(c=>({tag:c.tag,label:friendly[c.tag]||'&lt;'+c.tag+'&gt;'})));
   bar.innerHTML=cats.map(c=>
     `<button class="cat-pill ${activeCat===c.tag?'on':''}" onclick="activeCat='${c.tag}';renderCatBar();renderLib()">${c.label}</button>`
@@ -754,6 +828,183 @@ function renderLib(){
 }
 function closeModal(){document.getElementById('overlay').classList.remove('open');}
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
+
+/* ================================================================
+   MODELOS PRONTOS (templates)
+   ================================================================ */
+const TEMPLATES=[
+  {id:'ecom_joias', grp:'shop', emoji:'💎', name:'E-commerce 1 · Semijoias', desc:'Loja de semijoias/joias com vitrine, coleções e prova social.', sections:[
+    {title:'Avisos & topo', els:['topbar','freebar']},
+    {title:'Cabeçalho', els:['navbar_search']},
+    {title:'Destaque (banner)', els:['hero_carousel']},
+    {title:'Benefícios & categorias', els:['benefit_strip','categories']},
+    {title:'Coleção em destaque', els:['collection_banner']},
+    {title:'Mais vendidos', els:['product_tabs']},
+    {title:'Promoções', els:['banner_duplo','coupon_bar']},
+    {title:'Prova social', els:['testimonials','insta_feed']},
+    {title:'Newsletter', els:['newsletter']},
+    {title:'Rodapé', els:['footer','payments']},
+  ]},
+  {id:'ecom_moda', grp:'shop', emoji:'👜', name:'E-commerce 2 · Acessórios/Moda', desc:'Loja de acessórios e moda com selos, vitrine e avaliações.', sections:[
+    {title:'Topo', els:['topbar_social','freebar']},
+    {title:'Cabeçalho', els:['navbar_search']},
+    {title:'Banner principal', els:['hero']},
+    {title:'Selos de confiança', els:['benefit_strip']},
+    {title:'Categorias', els:['categories']},
+    {title:'Vitrine', els:['product_tabs']},
+    {title:'Banners promo', els:['banner_duplo']},
+    {title:'Avaliações', els:['reviews','testimonials']},
+    {title:'Newsletter', els:['newsletter']},
+    {title:'Rodapé', els:['footer','payments']},
+  ]},
+  {id:'ecom_geral', grp:'shop', emoji:'🛒', name:'E-commerce 3 · Loja geral', desc:'Estrutura de loja online genérica para qualquer segmento.', sections:[
+    {title:'Topo', els:['topbar','freebar']},
+    {title:'Cabeçalho', els:['navbar_search']},
+    {title:'Hero', els:['hero_split']},
+    {title:'Benefícios', els:['value_props']},
+    {title:'Categorias', els:['categories']},
+    {title:'Vitrine de produtos', els:['grid']},
+    {title:'Coleção', els:['collection_banner']},
+    {title:'Cupom', els:['coupon_bar']},
+    {title:'Newsletter', els:['newsletter']},
+    {title:'Rodapé', els:['footer','payments']},
+  ]},
+  {id:'salao', grp:'service', emoji:'💅', name:'Salão de Beleza / Estética', desc:'Serviços, antes & depois, equipe e agendamento.', sections:[
+    {title:'Cabeçalho', els:['navbar']},
+    {title:'Destaque', els:['hero_centered']},
+    {title:'Serviços & preços', els:['services_price']},
+    {title:'Antes & depois', els:['before_after']},
+    {title:'Profissionais', els:['staff_card']},
+    {title:'Galeria de trabalhos', els:['gallery']},
+    {title:'Depoimentos', els:['testimonials']},
+    {title:'Agendamento', els:['booking_form']},
+    {title:'Horário & localização', els:['hours_location']},
+    {title:'Rodapé', els:['footer_simple','social']},
+  ]},
+  {id:'barbearia', grp:'service', emoji:'💈', name:'Cabeleireiro / Barbearia', desc:'Serviços, combos, equipe e agendamento pelo WhatsApp.', sections:[
+    {title:'Cabeçalho', els:['navbar']},
+    {title:'Hero', els:['hero']},
+    {title:'Serviços & preços', els:['services_price']},
+    {title:'Combos / planos', els:['pricing']},
+    {title:'Equipe', els:['staff_card']},
+    {title:'Galeria', els:['gallery']},
+    {title:'Agende pelo WhatsApp', els:['schedule_cta']},
+    {title:'Depoimentos', els:['testimonials']},
+    {title:'Horário & localização', els:['hours_location']},
+    {title:'Rodapé', els:['footer_simple','social']},
+  ]},
+  {id:'corretora', grp:'realestate', emoji:'🏠', name:'Corretora de Imóveis', desc:'Busca de imóveis, destaques, financiamento e contato.', sections:[
+    {title:'Cabeçalho', els:['navbar']},
+    {title:'Busca de imóveis', els:['property_search']},
+    {title:'Imóveis em destaque', els:['property_grid']},
+    {title:'Imóvel destaque', els:['property_card']},
+    {title:'Por que comprar conosco', els:['value_props']},
+    {title:'Simulação de financiamento', els:['finance_cta']},
+    {title:'Sobre o corretor', els:['author']},
+    {title:'Depoimentos', els:['testimonials']},
+    {title:'Contato', els:['contact_form']},
+    {title:'Rodapé', els:['footer','social']},
+  ]},
+  {id:'clinica', grp:'service', emoji:'🩺', name:'Clínica / Consultório', desc:'Especialidades, corpo clínico, convênios e agendamento.', sections:[
+    {title:'Topo', els:['topbar_social']},
+    {title:'Cabeçalho', els:['navbar']},
+    {title:'Destaque', els:['hero_split']},
+    {title:'Especialidades', els:['specialties']},
+    {title:'Corpo clínico', els:['staff_card']},
+    {title:'Convênios', els:['logos']},
+    {title:'Agendamento', els:['booking_form']},
+    {title:'Perguntas frequentes', els:['faq_2col']},
+    {title:'Horário & localização', els:['hours_location']},
+    {title:'Rodapé', els:['footer_simple','social']},
+  ]},
+  {id:'landing_saas', grp:'outros', emoji:'🚀', name:'Landing SaaS / Serviço', desc:'Página de conversão para software ou serviço digital.', sections:[
+    {title:'Cabeçalho', els:['navbar']},
+    {title:'Hero', els:['hero_split']},
+    {title:'Provas (logos)', els:['logos']},
+    {title:'Recursos', els:['feature_split_icons']},
+    {title:'Destaques (bento)', els:['bento']},
+    {title:'Números', els:['stat_band']},
+    {title:'Planos', els:['pricing_toggle']},
+    {title:'Depoimentos', els:['testimonial_3up']},
+    {title:'FAQ & CTA', els:['faq_2col','cta_centered']},
+    {title:'Rodapé', els:['footer_cta','footer']},
+  ]},
+  {id:'dashboard_app', grp:'outros', emoji:'📊', name:'Painel / Dashboard', desc:'Tela de sistema com métricas, gráficos e tabela.', sections:[
+    {title:'Shell do app', els:['dash_layout']},
+    {title:'Métricas (KPIs)', els:['metric_cards']},
+    {title:'Gráficos', els:['chart_line','chart_bar']},
+    {title:'Distribuição', els:['chart_donut']},
+    {title:'Tabela de dados', els:['data_grid']},
+    {title:'Quadro Kanban', els:['kanban']},
+    {title:'Atividades', els:['activity_feed']},
+  ]},
+];
+const TPL_GRP=[{g:'all',label:'Todos'},{g:'shop',label:'e-commerce'},{g:'service',label:'serviços & saúde'},{g:'realestate',label:'imóveis'},{g:'outros',label:'outros'}];
+let activeTplGrp='all';
+function tplToSections(tpl){
+  return tpl.sections.map(s=>({title:s.title, elements:s.els.map(id=>({id,align:'full'}))}));
+}
+function openTemplates(){
+  activeTplGrp='all';
+  renderTplCatBar(); renderTemplates();
+  document.getElementById('tplOverlay').classList.add('open');
+}
+function closeTemplates(){document.getElementById('tplOverlay').classList.remove('open');}
+document.getElementById('tplOverlay').addEventListener('click',e=>{if(e.target.id==='tplOverlay')closeTemplates();});
+function renderTplCatBar(){
+  document.getElementById('tplCatBar').innerHTML=TPL_GRP.map(c=>
+    `<button class="cat-pill ${activeTplGrp===c.g?'on':''}" onclick="activeTplGrp='${c.g}';renderTplCatBar();renderTemplates()">${c.label}</button>`
+  ).join('');
+}
+function rasterizeSVG(svg,scale){
+  return new Promise(res=>{
+    const m=svg.match(/width="(\d+)" height="(\d+)"/);
+    const w=+m[1], h=+m[2];
+    const img=new Image();
+    img.onload=()=>{const c=document.createElement('canvas');c.width=Math.round(w*scale);c.height=Math.round(h*scale);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);res(c.toDataURL());};
+    img.onerror=()=>res('');
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  });
+}
+function renderTemplates(){
+  const grid=document.getElementById('tplGrid');
+  const list=TEMPLATES.filter(t=>activeTplGrp==='all'||t.grp===activeTplGrp);
+  grid.className='modal-body'; grid.innerHTML='';
+  const wrap=document.createElement('div'); wrap.className='tpl-grid';
+  list.forEach(t=>{
+    const nEl=t.sections.reduce((a,s)=>a+s.els.length,0);
+    const card=document.createElement('div'); card.className='tpl-card';
+    card.innerHTML=`<div class="tpl-thumb"><span class="tpl-loading">gerando preview…</span></div>
+      <div class="tpl-info">
+        <div class="tpl-name"><span class="tpl-emoji">${t.emoji}</span> ${t.name}</div>
+        <div class="tpl-desc">${t.desc}</div>
+        <div class="tpl-meta">
+          <span class="tpl-count">${t.sections.length} seções · ${nEl} blocos</span>
+          <span class="tpl-use">Usar modelo →</span>
+        </div>
+      </div>`;
+    card.onclick=()=>applyTemplate(t.id);
+    wrap.appendChild(card);
+    // preview nítido: rasteriza as primeiras seções em alta resolução
+    const svg=buildSVG(tplToSections(t).slice(0,5)).svg;
+    rasterizeSVG(svg,2).then(url=>{
+      const box=card.querySelector('.tpl-thumb');
+      if(url) box.innerHTML=`<img src="${url}" alt="preview ${t.name}">`;
+    });
+  });
+  grid.appendChild(wrap);
+}
+function applyTemplate(id){
+  const t=TEMPLATES.find(x=>x.id===id); if(!t)return;
+  if(sections.length && !confirm('Isso vai substituir o escopo atual pelo modelo "'+t.name+'". Continuar?')) return;
+  sections=[]; uid=0;
+  t.sections.forEach(s=>{ uid++; sections.push({id:uid, title:s.title, elements:s.els.map(eid=>({id:eid,align:'full'}))}); });
+  activeSection=null;
+  closeTemplates();
+  render();
+  toast('Modelo "'+t.name+'" carregado — edite ou exporte a imagem');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
 /* ================================================================
    RENDER PRINCIPAL
@@ -830,11 +1081,12 @@ function wrapTitle(t){
   return lines;
 }
 /* monta a página inteira como um SVG standalone (preview e export usam o mesmo) */
-function buildSVG(){
+function buildSVG(secs){
+  const data = secs || sections;
   const PAGE_W=840, GUT=64, PAD=20, GAP=14, SP=18;
   const cw=PAGE_W-GUT-PAD*2;
   const body=[]; let y=2;
-  sections.forEach((s,i)=>{
+  data.forEach((s,i)=>{
     const num=String(i).padStart(2,'0');
     const top=y; let ey=y+SP;
     if(s.elements.length){
@@ -858,7 +1110,7 @@ function buildSVG(){
     wrapTitle(s.title).forEach((ln,li)=>{
       body.push(`<text x="10" y="${top+36+li*10}" font-size="7.5" font-weight="700" fill="#333" font-family="Arial">${escapeXml(ln)}</text>`);
     });
-    if(i<sections.length-1) body.push(`<line x1="0" y1="${ey}" x2="${PAGE_W}" y2="${ey}" stroke="#1a1a1a" stroke-width="1.5"/>`);
+    if(i<data.length-1) body.push(`<line x1="0" y1="${ey}" x2="${PAGE_W}" y2="${ey}" stroke="#1a1a1a" stroke-width="1.5"/>`);
     y=ey;
   });
   const H=y+2;

@@ -8,9 +8,11 @@
 
 ## ✨ O que é
 
-**Wireframe Escopo Criador** é uma ferramenta 100% offline para montar rapidamente o escopo visual de um projeto web ou mobile. Você arrasta componentes para a tela, reordena, personaliza e exporta a imagem — tudo sem precisar de conexão com a internet.
+**Wireframe Escopo Criador** é uma ferramenta 100% offline para montar rapidamente o escopo visual de um projeto web ou mobile. Você escolhe um modelo pronto ou monta do zero com mais de **135 componentes** em estilo de planta profissional (linha fina), reordena, personaliza e exporta a imagem — tudo sem precisar de conexão com a internet nem de IA.
 
 É um **único arquivo HTML**. Abra no navegador e pronto.
+
+> Ideal para apresentar o escopo ao cliente como uma **planta de baixa fidelidade** — ele entende a estrutura da página antes de qualquer linha de código.
 
 ---
 
@@ -22,14 +24,29 @@ Baixe o arquivo `index.html` e abra no seu navegador (Chrome, Firefox, Edge, Saf
 
 Ou acesse diretamente pelo GitHub Pages se disponível.
 
-### 2. Montar o wireframe
+### 2. Começar rápido com um modelo pronto (opcional)
 
-- Clique em um componente na **Biblioteca** (coluna da esquerda) para adicionar à tela
+Clique em **✨ Modelos prontos** na barra superior para escolher um ponto de partida.
+O modelo é carregado já montado — depois é só editar e exportar.
+
+| Modelos disponíveis | |
+|---|---|
+| 💎 E-commerce 1 · Semijoias | 💅 Salão de Beleza / Estética |
+| 👜 E-commerce 2 · Acessórios/Moda | 💈 Cabeleireiro / Barbearia |
+| 🛒 E-commerce 3 · Loja geral | 🏠 Corretora de Imóveis |
+| 🚀 Landing SaaS / Serviço | 🩺 Clínica / Consultório |
+| 📊 Painel / Dashboard | |
+
+![Modelos prontos](docs/screenshot-templates.png)
+
+### 3. Montar o wireframe
+
+- Clique em um componente na **Biblioteca** para adicionar à seção
 - Use os botões **↑ ↓** para reordenar os componentes
-- Clique no **✏ lápis** para editar o rótulo de um componente
-- Clique no **🗑 lixo** para remover
+- Ajuste o alinhamento (largura total / esquerda / centro / direita)
+- Edite o título de cada seção e remova o que não quiser
 
-### 3. Exportar
+### 4. Exportar
 
 Clique em **⬇ Baixar PNG** no painel de exportação.
 
@@ -39,7 +56,7 @@ Clique em **⬇ Baixar PNG** no painel de exportação.
 
 O app foi otimizado para uso mobile. No celular, um botão flutuante **👁** aparece no canto inferior direito para abrir o preview em tela cheia.
 
-| Mobile — lista de componentes | Mobile — modal da biblioteca |
+| Mobile — modelos prontos | Mobile — biblioteca de componentes |
 |:---:|:---:|
 | ![Mobile](docs/screenshot-mobile.png) | ![Modal Mobile](docs/screenshot-mobile-modal.png) |
 
@@ -66,7 +83,7 @@ A exportação é feita **100% no navegador**, sem depender de internet ou de ne
 
 ## 📦 Biblioteca de componentes
 
-Mais de **85 componentes** organizados em categorias:
+Mais de **135 componentes** organizados em categorias — incluindo e-commerce, serviços/agendamento, saúde, imóveis e dashboard/app:
 
 ### Navegação
 | Componente | Descrição |
@@ -185,7 +202,7 @@ Mais de **85 componentes** organizados em categorias:
 index.html
 │
 ├── Biblioteca de ícones SVG (objeto I{})
-│   └── 85+ componentes com viewBox proporcional
+│   └── 135+ componentes com viewBox proporcional
 │
 ├── buildSVG()
 │   └── Monta o wireframe completo como SVG standalone
